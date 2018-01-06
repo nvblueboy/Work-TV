@@ -14,6 +14,8 @@ import time
 
 import ImageApp, TimeZoneApp
 
+import weather
+
 
 class WorkTV(RelativeLayout):
 	def __init__(self,**kwargs):
@@ -63,7 +65,11 @@ class CaptionBox(RelativeLayout):
 
 
 class AppContainer(RelativeLayout):
-	transitionTime = 5
+	transitionTime = 8
+	weatherUpdate = 600
+	weatherLocation="San+Juan+Capistrano,CA"
+
+	weatherUpdated = False
 
 
 	def __init__(self, **kwargs):
@@ -72,6 +78,8 @@ class AppContainer(RelativeLayout):
 		self.oldTime = 0
 
 		self.captionBox = None
+
+		self.weatherString = weather.getWeather(self.weatherLocation)
 
 	def setCaptionBox(self,captionBox):
 		self.captionBox = captionBox
@@ -86,6 +94,7 @@ class AppContainer(RelativeLayout):
 			slide = self.ids.Carousel.current_slide
 			self.captionBox.headline = slide.headline
 			self.captionBox.caption = slide.caption
+			self.captionBox.weather = self.weatherString + " | " +str(time.strftime("%I:%M:%S %p")).lstrip("0")
 
 
 		if (int(time.time()) != self.oldTime):
@@ -93,7 +102,17 @@ class AppContainer(RelativeLayout):
 			self.runTime += 1
 
 			if self.runTime % self.transitionTime == 0:
-				self.ids.Carousel.load_next()	
+				self.ids.Carousel.load_next()
+
+			if self.runTime % self.weatherUpdate == 0:
+				if self.weatherUpdated:
+					print("Loading weather")
+					self.weatherUpdated = True
+					self.weatherString = weather.getWeather(self.weatherLocation)
+					print(self.weatherString)
+					
+			else:
+				self.weatherUpdated = False
 
 class WorkTVApp(App):
 	def build(self):
