@@ -1,0 +1,71 @@
+<BottomRibbon>
+	RelativeLayout:
+		canvas.before:
+			Color:
+				rgba: .196,.416,.702,.75
+			Rectangle:
+				pos: self.pos
+				size:self.size
+		LogoBox:
+			pos_hint:{'right':1, 'top':.9}
+			size_hint:(.35,.8)
+		CaptionBox:
+			pos_hint:{'right':.6, 'top':.95}
+			size_hint:(.55,.95)
+
+<LogoBox>
+	RelativeLayout:
+		canvas.before:
+			Color:
+				rgba: 1,0,0,0
+			Rectangle:
+				size:self.size
+		AsyncImage:
+			source:'./images/SA.png'
+			allow_stretch:True
+
+<CaptionBox>
+	RelativeLayout:
+		canvas.before:
+			Color:
+				rgba:1,0,0,0
+			Rectangle:
+				size:self.size
+		Label:
+			text:root.Headline
+			halign:'left'
+			valign:'center'
+			text_size:self.size
+			font_size:'100sp'
+			font_name:'./fonts/Roboto-Light.ttf'
+			pos_hint:{'top':1}
+			size_hint:(1,.5)
+		Label:
+			text:root.Caption
+			halign:'left'
+			valign:'center'
+			text_size:self.size
+			font_size:'40sp'
+			font_name:'./fonts/Roboto-Light.ttf'
+			pos_hint:{'top':.5}
+			size_hint:(1,.3)
+		Label:
+			text:root.Weather
+			halign:'left'
+			valign:'center'
+			text_size:self.size
+			font_size:'30sp'
+			font_name:'./fonts/Roboto-Thin.ttf'
+			pos_hint:{'top':.2}
+			size_hint:(1,.2)
+
+<WorkTV>
+	RelativeLayout:
+		AsyncImage:
+			id:backgroundImage
+			source:root.ImageSource
+			size:self.size
+			allow_stretch:True
+		BottomRibbon:
+			size_hint: (1,.2)
+			pos_hint: {'top':.2}
