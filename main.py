@@ -7,8 +7,9 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.clock import Clock
 from kivy.properties import StringProperty
-
+from kivy.cache import Cache
 from kivy.config import Config
+from kivy.core.image import Image as CoreImage
 
 import time,json
 
@@ -19,6 +20,8 @@ class Slide():
 		self.filename = filename
 		self.headline = headline
 		self.caption = caption
+	def __str__(self):
+            return("Filename: "+self.filename+"\nHeadline: " +self.headline + "\nCaption: "+self.caption)
 
 class WorkTV(RelativeLayout):
 
@@ -38,7 +41,12 @@ class WorkTV(RelativeLayout):
 		fileHandle = open("./config.json")
 		contents = fileHandle.read()
 		fileHandle.close()
-		jsonData = json.loads(contents)
+		try:
+                    jsonData = json.loads(contents)
+                except:
+                    print("Something went wrong, dumping contents:")
+                    print(contents)
+                    quit()
 		outList = []
 		for d in jsonData["slides"]:
 			s = Slide(d["img"],d["head"],d["desc"])
@@ -48,6 +56,10 @@ class WorkTV(RelativeLayout):
 		self.weatherTime = self.settings["weather-update"]
 		self.weatherLocation = self.settings["weather-location"]
 		self.slides = outList
+		
+		print("Slides loaded:")
+		for slide in self.slides:
+                    print(slide)
 
 		self.currentSlide = self.slides[self.slideIndex]
 		self.ImageSource = self.currentSlide.filename
@@ -63,9 +75,14 @@ class WorkTV(RelativeLayout):
 		if t != self.oldTime:
 			self.runTime += 1
 			if self.runTime % self.slideTime == 0:
+                                Cache.remove('kv.image')
+                                Cache.remove('kv.texture')
 				self.slideIndex = (self.slideIndex + 1) % len(self.slides)
 				self.currentSlide = self.slides[self.slideIndex]
 				self.ImageSource = self.currentSlide.filename
+				print("Changed slide:")
+				print(self.currentSlide)
+				print("Read file: "+self.ImageSource)
 			self.oldTime = t
 
 		for child in self.children[0].children:

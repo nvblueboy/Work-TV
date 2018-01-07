@@ -8,9 +8,13 @@ def getWeather(location):
 	r = requests.get(baseurl+query+form)
 
 	if (r.status_code==200):
-		jsonData = json.loads(r.text)
-	condition = jsonData["query"]["results"]["channel"]["item"]["condition"]
-	return condition["temp"] + "° F | " + condition["text"]
-
+		try:
+			jsonData = json.loads(r.text)
+			condition = jsonData["query"]["results"]["channel"]["item"]["condition"]
+			return condition["temp"] + " F | " + condition["text"]
+		except:
+			print("Something went wrong. Dumping raw text.")
+			print(r.text)
+			return "Failed to get weather."
 if __name__ == "__main__":
 	print(getWeather("San+Juan+Capistrano,CA"));
