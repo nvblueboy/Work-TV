@@ -9,7 +9,7 @@ from kivy.clock import Clock
 from kivy.properties import StringProperty
 from kivy.cache import Cache
 from kivy.config import Config
-from kivy.core.image import Image as CoreImage
+from kivy.core.image import Image
 
 import time,json
 
@@ -33,6 +33,7 @@ class WorkTV(RelativeLayout):
 	currentSlide = Slide()
 
 	slideTime = 10
+	
 
 
 	def __init__(self, **kwargs):
@@ -66,6 +67,9 @@ class WorkTV(RelativeLayout):
 		self.updated = True
 		self.oldTime = 0;
 		self.runTime = 0;
+		
+
+	
 
 	def setContainer(self, cont):
 		self.container = cont;
@@ -75,14 +79,13 @@ class WorkTV(RelativeLayout):
 		if t != self.oldTime:
 			self.runTime += 1
 			if self.runTime % self.slideTime == 0:
-                                Cache.remove('kv.image')
-                                Cache.remove('kv.texture')
+                                
 				self.slideIndex = (self.slideIndex + 1) % len(self.slides)
 				self.currentSlide = self.slides[self.slideIndex]
 				self.ImageSource = self.currentSlide.filename
-				print("Changed slide:")
-				print(self.currentSlide)
-				print("Read file: "+self.ImageSource)
+				#print("Changed slide:")
+				#print(self.currentSlide)
+				#print("Read file: "+self.ImageSource)
 			self.oldTime = t
 
 		for child in self.children[0].children:
