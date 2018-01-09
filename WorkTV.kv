@@ -1,3 +1,30 @@
+#: include ImageApp.kv
+#: include TimeZoneApp.kv
+
+<AppContainer>
+	canvas.before:
+		Color: 
+			rgba:1,1,1,1
+		Rectangle:
+			size:self.size
+	Carousel:
+		id:Carousel
+		loop:True
+		TimeZoneApp:
+			headline:""
+			caption: ""
+			size_hint:(1,.8)
+			pos_hint:{"top":1}
+		ImageApp:
+			source:"./images/mountain.jpg"
+			headline:"It's pretty"
+			caption: "They're mountains aren't they nice"
+		ImageApp:
+			source:"./images/powerof10slide.png"
+			headline:"Power Of 10"
+			caption: "10 People, 10 Years, $10 million in impact"
+
+
 <BottomRibbon>
 	RelativeLayout:
 		canvas.before:
@@ -10,6 +37,7 @@
 			pos_hint:{'right':1, 'top':.9}
 			size_hint:(.35,.8)
 		CaptionBox:
+			id:captionBox
 			pos_hint:{'right':.6, 'top':.95}
 			size_hint:(.55,.95)
 
@@ -32,7 +60,7 @@
 			Rectangle:
 				size:self.size
 		Label:
-			text:root.Headline
+			text:root.headline
 			halign:'left'
 			valign:'center'
 			text_size:self.size
@@ -41,7 +69,7 @@
 			pos_hint:{'top':1}
 			size_hint:(1,.5)
 		Label:
-			text:root.Caption
+			text:root.caption
 			halign:'left'
 			valign:'center'
 			text_size:self.size
@@ -50,7 +78,7 @@
 			pos_hint:{'top':.5}
 			size_hint:(1,.3)
 		Label:
-			text:root.Weather
+			text:root.weather
 			halign:'left'
 			valign:'center'
 			text_size:self.size
@@ -61,12 +89,10 @@
 
 <WorkTV>
 	RelativeLayout:
-		Image:
-			id:backgroundImage
-			source:root.ImageSource
+		AppContainer:
 			size:self.size
-			allow_stretch:True
-			nocache:True
+			id:appContainer
 		BottomRibbon:
+			id:bottomRibbon
 			size_hint: (1,.2)
 			pos_hint: {'top':.2}
