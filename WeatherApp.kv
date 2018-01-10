@@ -1,0 +1,85 @@
+<WeatherApp>
+	headline:root.headline
+	caption:root.caption
+	RelativeLayout:
+		id:mainLayout
+		canvas.before:
+			Color: 
+				rgba:1,1,1,1
+			Rectangle:
+				size:self.size
+		RelativeLayout:
+			canvas.before:
+				Color:
+					rgba:0,0,1,0
+				Rectangle:
+					size:self.size
+			size_hint: (1,.3)
+			pos_hint: {"top":1}
+			Label: 
+				id:current_weather
+				text:root.current_weather
+				font_size:"140sp"
+				font_name:"./fonts/Roboto-Thin.ttf"
+				color: (.196,.416,.702,1)
+				text_size: self.width, None
+				size_hint: 1, None
+				height:self.texture_size[1]
+				halign: "center"
+		RelativeLayout:
+			id:forecastLayout
+			size_hint: (.9,.6)
+			pos_hint:{"top":.65, "right":.95}
+			BoxLayout:
+				DayForecast
+					id:day_1
+				DayForecast
+					id:day_2
+				DayForecast
+					id:day_3
+				DayForecast
+					id:day_4
+				DayForecast
+					id:day_5
+
+<DayForecast>
+	high: "70"
+	low: "60"
+	condition:"./weather_icons/sunny.png"
+	day: "Monday"
+	RelativeLayout:
+		canvas.before:
+			Color: 
+				rgba:0,1,1,0
+			Rectangle:
+				size:self.size
+		Label:
+			text:root.day
+			font_size:"70sp"
+			font_name:"./fonts/Roboto-Light.ttf"
+			color: (.196,.416,.702,1)
+			size:self.size
+			size_hint: (1,.2)
+			pos_hint: {"top":1}
+		Image:
+			source: root.condition
+			size:self.size
+			allow_stretch: True
+			size_hint: (1,.4)
+			pos_hint: {"top":.8}
+		Label:
+			text:root.high
+			font_size:"80sp"
+			font_name:"./fonts/Roboto-Thin.ttf"
+			color: (.196,.416,.702,1)
+			size:self.size
+			size_hint: (1,.2)
+			pos_hint: {"top":.4}
+		Label:
+			text:root.low
+			font_size:"80sp"
+			font_name:"./fonts/Roboto-Thin.ttf"
+			color: (.196,.416,.702,1)
+			size:self.size
+			size_hint: (1,.2)
+			pos_hint: {"top":.2}

@@ -12,7 +12,7 @@ from kivy.properties import StringProperty
 
 import time
 
-import ImageApp, TimeZoneApp
+import ImageApp, TimeZoneApp, WeatherApp
 
 import weather
 
@@ -88,7 +88,7 @@ class AppContainer(RelativeLayout):
 		for child in self.ids.Carousel.slides:
 			updateFN = getattr(child, "update", None)
 			if callable(updateFN):
-				child.update(args)
+				child.update(self.runTime)
 
 		if (self.captionBox != None):
 			slide = self.ids.Carousel.current_slide
