@@ -29,36 +29,22 @@ class App():
 		return n + "\n" + h + "\n" + c + "\n" + l
 
 				
-def getSlides():
-	url = "https://dbowman-wix-developer-edition.na73.force.com/services/apexrest/WallBoard"
+def getData(debug = False):
+	url = "https://dtb-sa.cs17.force.com/public/services/apexrest/WallBoard"
 	r = requests.get(url)
 	if r.status_code == 200:
 		jsonData = json.loads(r.text.decode('string-escape').strip('"'))
-		outList = []
-		for result in jsonData["result"]:
+		appList = []
+		slideList = []
+		if debug:
+			print(json.dumps(jsonData, indent=4, sort_keys=True))
+		for result in jsonData["slides"]:
 			s = Slide(result["img"], result["head"], result["cap"])
-			outList.append(s)
-		return outList
-
-def getApps():
-	url = "https://dbowman-wix-developer-edition.na73.force.com/services/apexrest/WallBoardSettings"
-	r = requests.get(url)
-	if r.status_code == 200:
-		jsonData = json.loads(r.text.decode('string-escape').strip('"'))
-		outList = []
-		for result in jsonData["result"]:
+			slideList.append(s)
+		for result in jsonData["apps"]:
 			a = App(result["app"], result["head"], result["cap"], result["loc"])
-			outList.append(a)
-		return outList
-
-
+			appList.append(a)
+		return appList, slideList
 
 if __name__ == "__main__":
-	s = getSlides()
-	a = getApps()
-
-	print("Slides: ")
-	for i in s: print(i)
-
-	print("Apps: ")
-	for i in a: print(i)
+	print(getData(debug=True))

@@ -50,7 +50,7 @@ class TimeZoneApp(RelativeLayout):
 		eastern_dt = pacific_dt.astimezone(self.easterntz)
 		self.eastern = eastern_dt.strftime(self.fmt).lstrip("0")
 
-		self.date = str(time.strftime("%A, %B %d, %Y"))
+		self.date = str(time.strftime("%A, %B ")) + str(time.strftime("%d, ")).lstrip("0") + str(time.strftime("%Y"))
 
 		
 

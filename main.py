@@ -39,9 +39,8 @@ class WorkTV(RelativeLayout):
 		self.ids.appContainer.setApps(apps)
 
 	def updateCarousel(self, *args):
-		slides = salesforce.getSlides()
+		apps, slides = salesforce.getData()
 		self.setSlides(slides)
-		apps = salesforce.getApps()
 		self.setApps(apps)
 
 
@@ -82,7 +81,7 @@ class CaptionBox(RelativeLayout):
 
 
 class AppContainer(RelativeLayout):
-	transitionTime = 4
+	transitionTime = 8
 	weatherUpdate = 600
 	weatherLocation="San+Juan+Capistrano,CA"
 
@@ -154,7 +153,7 @@ class AppContainer(RelativeLayout):
 				new = True
 				updated = False
 			if new:
-				a = appObjs[app.name](app=app)
+				a = appObjs[app.name](app=app, size_hint=(1,.8))
 				self.ids.Carousel.add_widget(a)
 				self.appWidgets[app.name] = a
 			if updated:
@@ -207,12 +206,8 @@ class WorkTVApp(App):
 		Config.set('graphics', 'fullscreen', 'true')
 		self.load_kv('WorkTV.kv')
 		self.appWindow = WorkTV()
-		slides = salesforce.getSlides()
+		apps,slides = salesforce.getData()
 		self.appWindow.setSlides(slides)
-
-		print("Slides added")
-
-		apps = salesforce.getApps()
 		self.appWindow.setApps(apps)
 		Clock.schedule_interval(self.appWindow.update, .2)
 		Clock.schedule_interval(self.appWindow.updateCarousel, 20)
