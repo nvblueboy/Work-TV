@@ -12,9 +12,12 @@ from kivy.properties import StringProperty
 
 import time
 
-import ImageApp, TimeZoneApp, WeatherApp
+import ImageApp, TimeZoneApp, WeatherApp, salesforce
 
 import weather
+
+
+appObjs = {"TimeZoneApp":TimeZoneApp.TimeZoneApp, "WeatherApp":WeatherApp.WeatherApp}
 
 
 class WorkTV(RelativeLayout):
@@ -28,6 +31,20 @@ class WorkTV(RelativeLayout):
 			updateFN = getattr(child, "update", None)
 			if callable(updateFN):
 				child.update(args)
+
+	def setSlides(self, slides):
+		self.ids.appContainer.setSlides(slides)
+
+	def setApps(self, apps):
+		self.ids.appContainer.setApps(apps)
+
+	def updateCarousel(self, *args):
+		slides = salesforce.getSlides()
+		self.setSlides(slides)
+		apps = salesforce.getApps()
+		self.setApps(apps)
+
+
 
 class BottomRibbon(RelativeLayout):
 	def __init__(self, **kwargs):
@@ -65,11 +82,13 @@ class CaptionBox(RelativeLayout):
 
 
 class AppContainer(RelativeLayout):
-	transitionTime = 8
+	transitionTime = 4
 	weatherUpdate = 600
 	weatherLocation="San+Juan+Capistrano,CA"
 
 	weatherUpdated = False
+
+	firstRun = True
 
 
 	def __init__(self, **kwargs):
@@ -81,14 +100,81 @@ class AppContainer(RelativeLayout):
 
 		self.weatherString = weather.getWeather(self.weatherLocation)
 
+		self.appWidgets = {}
+		self.slideWidgets = {}
+
+
 	def setCaptionBox(self,captionBox):
 		self.captionBox = captionBox
 
+	def setSlides(self, slides):
+		#Add or update apps.
+		for slide in slides:
+			#Determine if the app has updated (or is new).
+			updated = True
+			new = True
+			if slide.img in self.slideWidgets:
+				new = False
+				w = self.slideWidgets[slide.img]
+				if w.headline != slide.head or w.caption != slide.cap:
+					updated = True
+				else:
+					updated = False
+			else:
+				new = True
+				updated = False
+			if new:
+				image = ImageApp.ImageApp(source=slide.img,headline=slide.head,caption=slide.cap)
+				self.ids.Carousel.add_widget(image)
+				self.slideWidgets[slide.img] = image
+			if updated:
+				image = self.slideWidgets[slide.img]
+				image.headline = slide.head
+				image.caption = slide.cap
+		currentImages = [slide.img for slide in slides]
+		for slideName in self.slideWidgets.keys():
+			if slideName not in currentImages:
+				self.ids.Carousel.remove_widget(self.slideWidgets[slideName])
+				del self.slideWidgets[slideName];
+
+
+
+	def setApps(self, apps):
+		for app in apps:
+			updated = True
+			new = True
+			if app.name in self.appWidgets:
+				new = False
+				a = self.appWidgets[app.name]
+				if a.headline != app.head or a.caption != app.cap or a.location != app.loc:
+					updated = True
+				else:
+					updated = False
+			else:
+				new = True
+				updated = False
+			if new:
+				a = appObjs[app.name](app=app)
+				self.ids.Carousel.add_widget(a)
+				self.appWidgets[app.name] = a
+			if updated:
+				a = self.appWidgets[app.name]
+				a.app = app
+				a.setup()
+		#Remove apps.
+		currentApps = [app.name for app in apps]
+		for appName in self.appWidgets.keys():
+			if appName not in currentApps:
+				self.ids.Carousel.remove_widget(self.appWidgets[appName])
+				del self.appWidgets[appName];
+
 	def update(self, *args):
+
 		for child in self.ids.Carousel.slides:
 			updateFN = getattr(child, "update", None)
 			if callable(updateFN):
 				child.update(self.runTime)
+
 
 		if (self.captionBox != None):
 			slide = self.ids.Carousel.current_slide
@@ -121,7 +207,15 @@ class WorkTVApp(App):
 		Config.set('graphics', 'fullscreen', 'true')
 		self.load_kv('WorkTV.kv')
 		self.appWindow = WorkTV()
+		slides = salesforce.getSlides()
+		self.appWindow.setSlides(slides)
+
+		print("Slides added")
+
+		apps = salesforce.getApps()
+		self.appWindow.setApps(apps)
 		Clock.schedule_interval(self.appWindow.update, .2)
+		Clock.schedule_interval(self.appWindow.updateCarousel, 20)
 		return self.appWindow
 
 if __name__ == "__main__":

@@ -14,7 +14,7 @@ class WeatherApp(RelativeLayout):
 	updated = False
 	oldRunTime = 0
 
-	weather_location = "San+Juan+Capistrano,CA"
+	location = "San+Juan+Capistrano,CA"
 
 	updateTime = 600
 
@@ -22,8 +22,16 @@ class WeatherApp(RelativeLayout):
 
 	def __init__(self,**kwargs):
 		super(WeatherApp, self).__init__(**kwargs)
-		current_weather = "Loading weather..."
+		if "app" in kwargs:
+			self.app = kwargs["app"]
+			self.setup()
+		self.current_weather = "Loading weather..."
 
+	def setup(self):
+		self.headline = self.app.head
+		self.caption = self.app.cap
+		self.location = self.app.loc.replace(" ", "+")
+		self.updateData()
 
 	def update(self, *args):
 		if self.oldRunTime != args[0]:
@@ -33,12 +41,12 @@ class WeatherApp(RelativeLayout):
 
 	def updateData(self):
 		baseurl = "https://query.yahooapis.com/v1/public/yql?q="
-		query = 'select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="'+self.weather_location+'")'
+		query = 'select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="'+self.location+'")'
 		form = "&format=json"
 		r = requests.get(baseurl+query+form)
 
 		if (r.status_code==200):
-			# try:
+			try:
 				jsonData = json.loads(str(r.text).encode("utf-8"))
 				item = jsonData["query"]["results"]["channel"]["item"]
 				forecast=item["forecast"]
@@ -62,17 +70,9 @@ class WeatherApp(RelativeLayout):
 					widget.day = weathercodes.days[fc["day"].encode('utf-8').lower()]
 					widget.high = fc["high"]
 					widget.low = fc["low"]
-			# except:
-			# 	print("Failed to get latest weather.")
+			except:
+				print("Failed to get latest weather.")
 
-class Left(RelativeLayout):
-	def __init__(self,**kwargs):
-		super(Left, self).__init__(**kwargs)
-
-
-class Right(BoxLayout):
-	def __init__(self,**kwargs):
-		super(Right, self).__init__(**kwargs)
 
 class DayForecast(BoxLayout):
 	def __init__(self,**kwargs):

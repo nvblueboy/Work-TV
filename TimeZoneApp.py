@@ -24,8 +24,17 @@ class TimeZoneApp(RelativeLayout):
 
 	date = StringProperty()
 
+	location = ""
+
 	def __init__(self,**kwargs):
 		super(TimeZoneApp, self).__init__(**kwargs)
+		if "app" in kwargs:
+			self.app = kwargs["app"]
+			self.setup()
+
+	def setup(self):
+		self.headline = self.app.head
+		self.caption = self.app.cap
 
 	def update(self, *args):
 		now = datetime.datetime.now()
