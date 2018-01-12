@@ -31,8 +31,13 @@ class App():
 				
 def getData(debug = False):
 	url = "https://dtb-sa.cs17.force.com/public/services/apexrest/WallBoard"
-	r = requests.get(url)
-	if r.status_code == 200:
+	works = True
+	r = ""
+	try:
+            r = requests.get(url)
+        except:
+            works = False
+	if r.status_code == 200 and works:
 		jsonData = json.loads(r.text.decode('string-escape').strip('"'))
 		appList = []
 		slideList = []
@@ -45,6 +50,8 @@ def getData(debug = False):
 			a = App(result["app"], result["head"], result["cap"], result["loc"])
 			appList.append(a)
 		return appList, slideList
+	if not works:
+            return False, False
 
 if __name__ == "__main__":
 	print(getData(debug=True))

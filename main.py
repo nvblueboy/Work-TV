@@ -40,8 +40,9 @@ class WorkTV(RelativeLayout):
 
 	def updateCarousel(self, *args):
 		apps, slides = salesforce.getData()
-		self.setSlides(slides)
-		self.setApps(apps)
+		if apps or slides:
+                    self.setSlides(slides)
+                    self.setApps(apps)
 
 
 
@@ -207,8 +208,9 @@ class WorkTVApp(App):
 		self.load_kv('WorkTV.kv')
 		self.appWindow = WorkTV()
 		apps,slides = salesforce.getData()
-		self.appWindow.setSlides(slides)
-		self.appWindow.setApps(apps)
+		if apps or slides:
+                    self.appWindow.setSlides(slides)
+                    self.appWindow.setApps(apps)
 		Clock.schedule_interval(self.appWindow.update, .2)
 		Clock.schedule_interval(self.appWindow.updateCarousel, 20)
 		return self.appWindow
