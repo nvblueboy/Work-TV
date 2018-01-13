@@ -12,12 +12,12 @@ from kivy.properties import StringProperty
 
 import time
 
-import ImageApp, TimeZoneApp, WeatherApp, salesforce
+import ImageApp, TimeZoneApp, WeatherApp, TrafficApp, salesforce
 
 import weather
 
 
-appObjs = {"TimeZoneApp":TimeZoneApp.TimeZoneApp, "WeatherApp":WeatherApp.WeatherApp}
+appObjs = {"TimeZoneApp":TimeZoneApp.TimeZoneApp, "WeatherApp":WeatherApp.WeatherApp, "TrafficApp":TrafficApp.TrafficApp}
 
 
 class WorkTV(RelativeLayout):
@@ -154,7 +154,10 @@ class AppContainer(RelativeLayout):
 				new = True
 				updated = False
 			if new:
-				a = appObjs[app.name](app=app, size_hint=(1,.8))
+				size = (1,.8)
+				if hasattr(appObjs[app.name],"noResize"):
+					size = (1,1)
+				a = appObjs[app.name](app=app, size_hint=size)
 				self.ids.Carousel.add_widget(a)
 				self.appWidgets[app.name] = a
 			if updated:

@@ -1,0 +1,12 @@
+<TrafficApp>
+	headline:root.headline
+	caption:root.caption
+	pos_hint:{"top":1}
+	size_hint:(1,1)
+	img:asyn_image
+	RelativeLayout:
+		AsyncImage:
+			id: asyn_image
+			nocache:True
+			source: root.source
+			allow_stretch:True
