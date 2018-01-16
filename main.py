@@ -12,12 +12,15 @@ from kivy.properties import StringProperty
 
 import time
 
-import ImageApp, TimeZoneApp, WeatherApp, TrafficApp, salesforce
+import ImageApp, TimeZoneApp, WeatherApp, TrafficApp, TrafficTimeApp, salesforce
 
 import weather
 
 
-appObjs = {"TimeZoneApp":TimeZoneApp.TimeZoneApp, "WeatherApp":WeatherApp.WeatherApp, "TrafficApp":TrafficApp.TrafficApp}
+appObjs = {"TimeZoneApp":TimeZoneApp.TimeZoneApp, 
+	       "WeatherApp":WeatherApp.WeatherApp, 
+	       "TrafficApp":TrafficApp.TrafficApp,
+	       "TrafficTimeApp":TrafficTimeApp.TrafficTimeApp}
 
 
 class WorkTV(RelativeLayout):

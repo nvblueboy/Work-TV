@@ -1,0 +1,26 @@
+<TrafficTimeApp>
+	headline:root.headline
+	caption:root.caption
+	api_key:"AIzaSyBy2E4dFN4o0dXA6WOl35ZL52yz5gVo_WQ"
+	pos_hint:{"top":1}
+	size_hint:(1,1)
+	BoxLayout:
+		orientation:"vertical"
+		id: components
+		Label:
+			id:NoUpdate
+			font_size:'90sp'
+			font_name:'./fonts/Roboto-Medium.ttf'
+			color: (.196,.416,.702,1)
+			text: "Travel time to:"
+
+
+<TrafficTimeComponent>
+	time:"50m"
+	destination:"Chapman University"
+	string: "Chapman University: 50m"
+	Label:
+		font_size:'90sp'
+		font_name:'./fonts/Roboto-Light.ttf'
+		color: (.196,.416,.702,1)
+		text: root.destination + ": " + root.time
