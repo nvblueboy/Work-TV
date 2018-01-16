@@ -39,7 +39,7 @@ def getData(debug = False):
             r = requests.get(url)
         except:
             works = False
-	if r.status_code == 200 and works:
+	if r != "" and r.status_code == 200 and works:
 		jsonData = json.loads(r.text.decode('string-escape').strip('"'))
 		appList = []
 		slideList = []
