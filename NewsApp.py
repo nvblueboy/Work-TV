@@ -14,6 +14,8 @@ class NewsApp(FloatLayout):
 
 	ratio_set = False
 
+	noResize = True
+
 	article_source = StringProperty()
 	article_headline = StringProperty()
 
@@ -29,8 +31,9 @@ class NewsApp(FloatLayout):
 		self.headline = self.app.head
 		self.caption = self.app.cap
 		try:
-			self.location = self.app.location
+			self.location = self.app.loc
 		except:
+			print("Couldn't find a location. Assuming national...")
 			self.location="national"
 		self.key = self.app.key
 		self.ratio_set = False
@@ -40,9 +43,6 @@ class NewsApp(FloatLayout):
 		ratio = self.ids.image.image_ratio
 		self.ids.image.size_hint = (1, ratio)
 		self.ratio_set = True
-		if self.slideUpdated == False:
-			self.updateData()
-			self.slideUpdated = True
 
 	def updateData(self):
 		url = "https://api.nytimes.com/svc/topstories/v2/"+self.location+".json?api-key="+self.key
@@ -58,9 +58,6 @@ class NewsApp(FloatLayout):
 						img = m["url"]
 				self.article_source = img
 				self.article_headline = title
-				print("done")
-				print(img)
-				print(title)
 			else:
 				print("it doesn't work")
 
