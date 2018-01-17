@@ -16,6 +16,9 @@ class NewsApp(FloatLayout):
 
 	noResize = True
 
+	updateTime = 600
+	oldRunTime = 0
+
 	article_source = StringProperty()
 	article_headline = StringProperty()
 
@@ -43,6 +46,11 @@ class NewsApp(FloatLayout):
 		ratio = self.ids.image.image_ratio
 		self.ids.image.size_hint = (1, ratio)
 		self.ratio_set = True
+
+		if self.oldRunTime != args[0]:
+			if args[0] % self.updateTime == 0:
+				self.updateData()
+			self.oldRunTime = args[0]
 
 	def updateData(self):
 		url = "https://api.nytimes.com/svc/topstories/v2/"+self.location+".json?api-key="+self.key
