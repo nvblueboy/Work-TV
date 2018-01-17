@@ -12,15 +12,16 @@ from kivy.properties import StringProperty
 
 import time
 
-import ImageApp, TimeZoneApp, WeatherApp, TrafficApp, TrafficTimeApp, salesforce
+import ImageApp, TimeZoneApp, WeatherApp, TrafficApp, TrafficTimeApp, NewsApp, salesforce
 
 import weather
 
 
 appObjs = {"TimeZoneApp":TimeZoneApp.TimeZoneApp, 
-	       "WeatherApp":WeatherApp.WeatherApp, 
-	       "TrafficApp":TrafficApp.TrafficApp,
-	       "TrafficTimeApp":TrafficTimeApp.TrafficTimeApp}
+		   "WeatherApp":WeatherApp.WeatherApp, 
+		   "TrafficApp":TrafficApp.TrafficApp,
+		   "TrafficTimeApp":TrafficTimeApp.TrafficTimeApp,
+		   "NewsApp":NewsApp.NewsApp}
 
 
 class WorkTV(RelativeLayout):
@@ -44,8 +45,8 @@ class WorkTV(RelativeLayout):
 	def updateCarousel(self, *args):
 		apps, slides = salesforce.getData()
 		if apps or slides:
-                    self.setSlides(slides)
-                    self.setApps(apps)
+			self.setSlides(slides)
+			self.setApps(apps)
 
 
 
@@ -146,10 +147,10 @@ class AppContainer(RelativeLayout):
 		for app in apps:
 			updated = True
 			new = True
-			if app.name in self.appWidgets:
+			if app.id in self.appWidgets:
 				new = False
-				a = self.appWidgets[app.name]
-				if a.headline != app.head or a.caption != app.cap or a.location != app.loc:
+				a = self.appWidgets[app.id]
+				if a.id != app.id:
 					updated = True
 				else:
 					updated = False
@@ -161,14 +162,15 @@ class AppContainer(RelativeLayout):
 				if hasattr(appObjs[app.name],"noResize"):
 					size = (1,1)
 				a = appObjs[app.name](app=app, size_hint=size)
+				a.id = app.id
 				self.ids.Carousel.add_widget(a)
-				self.appWidgets[app.name] = a
+				self.appWidgets[app.id] = a
 			if updated:
-				a = self.appWidgets[app.name]
+				a = self.appWidgets[app.id]
 				a.app = app
 				a.setup()
 		#Remove apps.
-		currentApps = [app.name for app in apps]
+		currentApps = [app.id for app in apps]
 		for appName in self.appWidgets.keys():
 			if appName not in currentApps:
 				self.ids.Carousel.remove_widget(self.appWidgets[appName])
@@ -215,8 +217,8 @@ class WorkTVApp(App):
 		self.appWindow = WorkTV()
 		apps,slides = salesforce.getData()
 		if apps or slides:
-                    self.appWindow.setSlides(slides)
-                    self.appWindow.setApps(apps)
+					self.appWindow.setSlides(slides)
+					self.appWindow.setApps(apps)
 		Clock.schedule_interval(self.appWindow.update, .2)
 		Clock.schedule_interval(self.appWindow.updateCarousel, 20)
 		return self.appWindow

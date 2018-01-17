@@ -15,7 +15,8 @@ class Slide():
 		return i + "\n" + h + "\n" + c
 
 class App():
-	def __init__(self, name, head, cap, loc, key):
+	def __init__(self, name, head, cap, loc, key, recordId):
+		self.id = recordId
 		self.name = name
 		self.head = head
 		self.cap = cap
@@ -49,7 +50,7 @@ def getData(debug = False):
 			s = Slide(result["img"], result["head"], result["cap"])
 			slideList.append(s)
 		for result in jsonData["apps"]:
-			a = App(result["app"], result["head"], result["cap"], result["loc"], result["key"])
+			a = App(result["app"], result["head"], result["cap"], result["loc"], result["key"], result["id"])
 			appList.append(a)
 		return appList, slideList
 	if not works:
