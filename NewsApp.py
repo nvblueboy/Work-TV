@@ -28,7 +28,10 @@ class NewsApp(FloatLayout):
 	def setup(self):
 		self.headline = self.app.head
 		self.caption = self.app.cap
-		self.location = self.app.location
+		try:
+			self.location = self.app.location
+		except:
+			self.location="national"
 		self.key = self.app.key
 		self.ratio_set = False
 		self.updateData()
