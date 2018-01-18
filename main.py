@@ -187,19 +187,21 @@ class AppContainer(RelativeLayout):
 			if callable(updateFN):
 				child.update(self.runTime)
 
+		slide = self.ids.Carousel.current_slide
+		
+		if not hasattr(slide,"length") or slide.length == -1:
+			slide.length = self.transitionTime
 
 		if (self.captionBox != None):
-			slide = self.ids.Carousel.current_slide
 			self.captionBox.headline = slide.headline
 			self.captionBox.caption = slide.caption
 			self.captionBox.weather = self.weatherString + " | " +str(time.strftime("%I:%M:%S %p")).lstrip("0")
-
 
 		if (int(time.time()) != self.oldTime):
 			self.oldTime = int(time.time())
 			self.runTime += 1
 
-			if self.runTime % self.transitionTime == 0:
+			if self.runTime % slide.length == 0:
 				self.ids.Carousel.load_next()
 
 			if self.runTime % self.weatherUpdate == 0:
