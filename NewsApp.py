@@ -24,6 +24,8 @@ class NewsApp(FloatLayout):
 
 	slideUpdated = False
 
+	stringDict = None
+
 	def __init__(self,**kwargs):
 		super(NewsApp, self).__init__(**kwargs)
 		if "app" in kwargs:
@@ -42,6 +44,9 @@ class NewsApp(FloatLayout):
 		self.ratio_set = False
 		self.updateData()
 
+	def setStringDict(self, s):
+		self.stringDict = s
+
 	def update(self, *args):
 		ratio = self.ids.image.image_ratio
 		self.ids.image.size_hint = (1, ratio)
@@ -59,6 +64,13 @@ class NewsApp(FloatLayout):
 			if r.status_code == 200:
 				jsonData = json.loads(r.text)
 				result = jsonData["results"][0]
+				if self.stringDict != None:
+					# If a stringDict is wired up, then find an article not yet shown.
+					count = 0
+					while jsonData["results"][count]["title"].lower() in self.stringDict.values():
+						count += 1
+					result = jsonData["results"][count]
+					self.stringDict[self.id] = result["title"].lower()
 				title = result["title"]
 				img = ""
 				for m in result["multimedia"]:

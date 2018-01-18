@@ -94,6 +94,8 @@ class AppContainer(RelativeLayout):
 
 	firstRun = True
 
+	stringDict = {}
+
 
 	def __init__(self, **kwargs):
 		super(AppContainer, self).__init__(**kwargs)
@@ -152,6 +154,7 @@ class AppContainer(RelativeLayout):
 			if app.id in self.appWidgets:
 				new = False
 				a = self.appWidgets[app.id]
+
 				if a.id != app.id:
 					updated = True
 				else:
@@ -159,15 +162,24 @@ class AppContainer(RelativeLayout):
 			else:
 				new = True
 				updated = False
+
 			if new:
 				size = (1,.8)
+
 				if hasattr(appObjs[app.name],"noResize"):
 					size = (1,1)
+
 				a = appObjs[app.name](app=app, size_hint=size)
 				a.id = app.id
 				self.ids.Carousel.add_widget(a)
+
+				if app.name == "NewsApp":
+					a.setStringDict(self.stringDict)
+
 				self.appWidgets[app.id] = a
 				a.length = app.length
+				a.setup()
+
 			if updated:
 				a = self.appWidgets[app.id]
 				a.app = app
