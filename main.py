@@ -131,10 +131,12 @@ class AppContainer(RelativeLayout):
 				image = ImageApp.ImageApp(source=slide.img,headline=slide.head,caption=slide.cap)
 				self.ids.Carousel.add_widget(image)
 				self.slideWidgets[slide.img] = image
+				image.length = slide.length
 			if updated:
 				image = self.slideWidgets[slide.img]
 				image.headline = slide.head
 				image.caption = slide.cap
+				image.length = slide.length
 		currentImages = [slide.img for slide in slides]
 		for slideName in self.slideWidgets.keys():
 			if slideName not in currentImages:
@@ -165,9 +167,11 @@ class AppContainer(RelativeLayout):
 				a.id = app.id
 				self.ids.Carousel.add_widget(a)
 				self.appWidgets[app.id] = a
+				a.length = app.length
 			if updated:
 				a = self.appWidgets[app.id]
 				a.app = app
+				a.length = app.length
 				a.setup()
 		#Remove apps.
 		currentApps = [app.id for app in apps]
