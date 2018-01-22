@@ -2,6 +2,7 @@ from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.core.image import Image
 from kivy.properties import StringProperty
+from kivy.logger import Logger
 
 
 import time, requests, json
@@ -71,7 +72,7 @@ class WeatherApp(RelativeLayout):
 					widget.high = fc["high"]
 					widget.low = fc["low"]
 			except:
-				print("WeatherApp update: Failed to get latest weather.")
+				Logger.error("WeatherApp: Status code was "+r.status_code+".")
 
 
 class DayForecast(BoxLayout):

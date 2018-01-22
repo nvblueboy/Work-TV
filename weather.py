@@ -1,4 +1,6 @@
 ##Handles all weather.
+from kivy.logger import Logger
+
 import requests, json
 
 import time
@@ -8,15 +10,14 @@ def getWeather(location):
 	query = 'select item.condition from weather.forecast where woeid in (select woeid from geo.places(1) where text="'+location+'")'
 	form = "&format=json"
 	r = requests.get(baseurl+query+form)
-        print("Updaing weather string: "+time.strftime("%d %b %Y %H:%M:%S"))
+        Logger.info("Weather Module: Updaing weather string @ "+time.strftime("%d %b %Y %H:%M:%S"))
 	if (r.status_code==200):
 		try:
 			jsonData = json.loads(r.text)
 			condition = jsonData["query"]["results"]["channel"]["item"]["condition"]
 			return condition["temp"] + " F | " + condition["text"]
 		except:
-			print("weather.getWeather(): Something went wrong. Dumping raw text.")
-			print(r.text)
+			Logger.error("Weather Module: Something went wrong: "+r.text)
 			return "Failed to get weather."
 
 def getWeather_app(location):
@@ -24,7 +25,7 @@ def getWeather_app(location):
 	query = 'select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="'+location+'")'
 	form = "&format=json"
 	r = requests.get(baseurl+query+form)
-        print("Updaing weather app: "+time.strftime("%d %b %Y %H:%M:%S"))
+	Logger.info("Weather Module: Updating weather app @ "+time.strftime("%d %b %Y %H:%M:%S"))
 	if (r.status_code==200):
 		try:
 			jsonData = json.loads(r.text)

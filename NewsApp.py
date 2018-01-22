@@ -23,6 +23,9 @@ class NewsApp(FloatLayout):
 	article_source = StringProperty()
 	article_headline = StringProperty()
 
+	article_link = StringProperty()
+	qr_link = StringProperty()
+
 	slideUpdated = False
 
 	stringDict = None
@@ -79,9 +82,11 @@ class NewsApp(FloatLayout):
 						img = m["url"]
 				self.article_source = img
 				self.article_headline = title
+				self.article_link = result["url"]
+				self.qr_link = "https://api.qrserver.com/v1/create-qr-code/?data="+self.article_link
 			else:
-				print("NewsApp update: Status code was not 200. Printing body.")
-				print(r.text)
+				Logger.info("NewsApp: Status code was not 200. Printing body.")
+				Logger.info(r.text)
 
-		except:
-			print("Had issues getting news.")
+		except Exception as e:
+			Logger.error("NewsApp: There was an exception: "+str(e))
