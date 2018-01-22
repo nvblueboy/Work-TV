@@ -9,6 +9,7 @@ from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.properties import StringProperty
+from kivy.logger import Logger
 
 import time
 
@@ -218,10 +219,10 @@ class AppContainer(RelativeLayout):
 
 			if self.runTime % self.weatherUpdate == 0:
 				if self.weatherUpdated:
-					print("Loading weather")
+					Logger.info("AppContainer: Loading weather")
 					self.weatherUpdated = True
 					self.weatherString = weather.getWeather(self.weatherLocation)
-					print(self.weatherString)
+					Logger.info("AppContainer: Weather String: "+self.weatherString)
 					
 			else:
 				self.weatherUpdated = False
@@ -231,6 +232,14 @@ class WorkTVApp(App):
 		Config.set('graphics', 'width', '1920')
 		Config.set('graphics', 'height', '1080')
 		Config.set('graphics', 'fullscreen', 'true')
+
+		#Set configuration settings.
+		Config.set('kivy', 'log_level', 'info')
+		Config.set('kivy', 'log_dir', "logs")
+		Config.set('kivy', 'log_name', "log_%y_%m_%d_%H_%M_%S.txt")
+		Config.set('kivy', 'log_enable', 1)
+		Config.set('kivy', 'log_maxfile', 50)
+
 		self.load_kv('WorkTV.kv')
 		self.appWindow = WorkTV()
 		apps,slides = salesforce.getData()

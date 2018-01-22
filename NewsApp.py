@@ -3,6 +3,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.core.image import Image
 from kivy.properties import StringProperty
+from kivy.logger import Logger
 
 import requests, json
 
@@ -38,7 +39,7 @@ class NewsApp(FloatLayout):
 		try:
 			self.location = self.app.loc
 		except:
-			print("Couldn't find a location. Assuming national...")
+			Logger.info("NewsApp: Couldn't find a location. Assuming national...")
 			self.location="national"
 		self.key = self.app.key
 		self.ratio_set = False
