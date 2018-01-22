@@ -71,7 +71,7 @@ class WeatherApp(RelativeLayout):
 					widget.high = fc["high"]
 					widget.low = fc["low"]
 			except:
-				print("Failed to get latest weather.")
+				print("WeatherApp update: Failed to get latest weather.")
 
 
 class DayForecast(BoxLayout):
