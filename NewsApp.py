@@ -80,7 +80,8 @@ class NewsApp(FloatLayout):
 				self.article_source = img
 				self.article_headline = title
 			else:
-				print("it doesn't work")
+				print("NewsApp update: Status code was not 200. Printing body.")
+				print(r.text)
 
 		except:
 			print("Had issues getting news.")
