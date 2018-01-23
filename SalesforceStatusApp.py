@@ -69,7 +69,7 @@ class SalesforceStatusApp(BoxLayout):
 
 	def setupBoxes(self):
 		count = 0
-		for row in range(9):
+		for row in range(8):
 			layout = BoxLayout()
 			self.ids.rows.add_widget(layout)
 			for column in range(20):
