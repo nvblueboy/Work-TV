@@ -64,6 +64,8 @@ class SalesforceStatusApp(BoxLayout):
 		self.headline = self.app.head
 		self.caption = self.app.cap
 		self.setupBoxes()
+		self.updateData()
+		self.setupDone = True
 
 	def setupBoxes(self):
 		count = 0
