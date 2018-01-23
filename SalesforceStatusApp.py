@@ -46,7 +46,7 @@ class Server():
 
 class SalesforceStatusApp(BoxLayout):
 
-	updateTime = 60
+	updateTime = 300
 
 	oldRunTime = 0
 
