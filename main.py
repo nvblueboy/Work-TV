@@ -13,7 +13,7 @@ from kivy.logger import Logger
 
 import time
 
-import ImageApp, TimeZoneApp, WeatherApp, TrafficApp, TrafficTimeApp, NewsApp, salesforce
+import ImageApp, TimeZoneApp, WeatherApp, TrafficApp, TrafficTimeApp, NewsApp, SalesforceStatusApp, salesforce
 
 import weather
 
@@ -22,7 +22,8 @@ appObjs = {"TimeZoneApp":TimeZoneApp.TimeZoneApp,
 		   "WeatherApp":WeatherApp.WeatherApp, 
 		   "TrafficApp":TrafficApp.TrafficApp,
 		   "TrafficTimeApp":TrafficTimeApp.TrafficTimeApp,
-		   "NewsApp":NewsApp.NewsApp}
+		   "NewsApp":NewsApp.NewsApp,
+		   "SalesforceStatusApp":SalesforceStatusApp.SalesforceStatusApp}
 
 
 class WorkTV(RelativeLayout):

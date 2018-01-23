@@ -1,0 +1,28 @@
+<SalesforceStatusApp>
+	headline:root.headline
+	caption:root.caption
+	BoxLayout:
+
+		padding: [5]
+		id:rows
+		orientation: "vertical"
+		
+
+<SalesforceServer>
+	name: "NA00"
+	source: "./status_icons/cross.png"
+	RelativeLayout:
+		Label:
+			text:root.name
+			font_size:"20sp"
+			font_name:"./fonts/Roboto-Light.ttf"
+			color: (.196,.416,.702,1)
+			size:self.size
+			pos_hint:{"top":1}
+			text_size: self.size
+			valign:"top"
+			halign:"center"
+		AsyncImage:
+			size_hint:(.7, .6)
+			pos_hint:{"top":.7, "right":.85}
+			source:root.source

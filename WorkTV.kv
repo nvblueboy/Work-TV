@@ -4,6 +4,7 @@
 #: include TrafficApp.kv
 #: include TrafficTimeApp.kv
 #: include NewsApp.kv
+#: include SalesforceStatusApp.kv
 
 <AppContainer>
 	canvas.before:
@@ -14,6 +15,11 @@
 	Carousel:
 		id:Carousel
 		loop:True
+		SalesforceStatusApp:
+			headline: "Salesforce Server Status"
+			caption: "More info at http://trust.salesforce.com"
+			size_hint:(1,.8)
+			pos_hint:{"top":1}
 
 
 
