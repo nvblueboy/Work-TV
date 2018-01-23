@@ -61,15 +61,17 @@ class SalesforceStatusApp(BoxLayout):
 			self.setup()
 
 	def setup(self):
+		Logger.info("Salesforce Status: Setting up module.")
 		self.headline = self.app.head
 		self.caption = self.app.cap
-		self.setupBoxes()
-		self.updateData()
-		self.setupDone = True
+		if not self.setupDone:
+			self.setupBoxes()
+			self.updateData()
 
 	def setupBoxes(self):
+		Logger.info("Salesforce Status: Setting up boxes.")
 		count = 0
-		for row in range(8):
+		for row in range(9):
 			layout = BoxLayout()
 			self.ids.rows.add_widget(layout)
 			for column in range(20):
@@ -105,10 +107,6 @@ class SalesforceStatusApp(BoxLayout):
 
 
 	def update(self, *args):
-		if not self.setupDone:
-			self.setupBoxes()
-			self.updateServers()
-			self.updateBoxes()
 		if self.oldRunTime != args[0]:
 			if args[0] % self.updateTime == 0:
 				self.updateData()
