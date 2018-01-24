@@ -5,7 +5,7 @@ from kivy.core.image import Image
 from kivy.properties import StringProperty
 from kivy.logger import Logger
 
-import requests, json
+import requests, json, time
 
 class Server():
 
@@ -16,8 +16,10 @@ class Server():
 		self.num = int(name[2:])
 		self.status = status
 		self.component = ""
+		self.name = name
 
 	def __str__(self):
+		cm = ""
 		if self.component != "":
 			cm = ", Linked"
 		return self.code + str(self.num) + ": " + self.status + cm
@@ -43,8 +45,14 @@ class Server():
 			s = "check.png"
 		self.component.source = "./status_icons/"+s
 
+class Event():
 
-class SalesforceStatusApp(BoxLayout):
+	def __init__(self, name, instances, startTime):
+		self.name = name
+		self.instances = instances
+		self.startTime = startTime
+
+class SalesforceStatusApp(RelativeLayout):
 
 	updateTime = 300
 
@@ -54,34 +62,24 @@ class SalesforceStatusApp(BoxLayout):
 
 	boxes = {}
 
+	statusString = StringProperty()
+	affectedServers = StringProperty()
+
 	def __init__(self,**kwargs):
 		super(SalesforceStatusApp, self).__init__(**kwargs)
 		if "app" in kwargs:
 			self.app = kwargs["app"]
 			self.setup()
+		self.statusString = "Loading server data..."
+		self.affectedServers = ""
 
 	def setup(self):
 		Logger.info("Salesforce Status: Setting up module.")
 		self.headline = self.app.head
 		self.caption = self.app.cap
-		if not self.setupDone:
-			self.setupBoxes()
-			self.updateData()
-
-	def setupBoxes(self):
-		Logger.info("Salesforce Status: Setting up boxes.")
-		count = 0
-		for row in range(9):
-			layout = BoxLayout()
-			self.ids.rows.add_widget(layout)
-			for column in range(20):
-				server = SalesforceServer()
-				self.boxes[count] = server
-				count += 1
-				layout.add_widget(server)
-		self.setupDone = True
 
 	def updateServers(self):
+		Logger.info("Salesforce Status: Updating info.")
 		self.servers = []
 		count = 0
 		r = requests.get("https://api.status.salesforce.com/v1/instances/status")
@@ -90,41 +88,76 @@ class SalesforceStatusApp(BoxLayout):
 				jsonData = json.loads(r.text)
 				self.servers = []
 				for server in jsonData:
-					s = Server(server["key"],server["status"])
-					self.servers.append(s)
-				self.servers.sort()
+					if server["status"] != "OK":
+						s = Server(server["key"],server["status"])
+						self.servers.append(s)
+				if len(self.servers) == 0:
+					self.statusString = "All servers operational."
+					self.affectedServers = ""
+				else:
+					self.statusString = "Servers are impacted."
+					self.affectedServers = makeServersString([svr.name for svr in self.servers], 8)
 			except:
 				Logger.error("Salesforce Status: Could not parse JSON." + r.text)
 		else:
 			Logger.error("Salesforce Status: Couldn't pull Salesforce status, status code: "+str(r.status_code))
 
-	def updateBoxes(self):
-		for boxNum in range(min(len(self.boxes),len(self.servers))):
-			box = self.boxes[boxNum]
-			server = self.servers[boxNum]
-			server.setComponent(box)
-			server.updateBox()
+	def updateCalendar(self):
+		r = requests.get("https://api.status.salesforce.com/v1/maintenances?startTime="+time.strftime("%Y-%m-%d"))
+		if r.status_code == 200:
+			jsonData = json.loads(r.text)
+			evts = {}
+			for evt in jsonData:
+				name = evt["name"]
+				timeString = evt["plannedStartTime"]
+				start = time.strptime(timeString,"%Y-%m-%dT%H:%M:%S.000Z")
+				if timeString+name not in evts:
+					evts[timeString+name] = Event(name, set(evt["instanceKeys"]), start)
+				else:
+					for server in list(evt["instanceKeys"]):
+						evts[timeString+name].instances.add(server)
+			self.evts = list(evts.values())
+			self.evts.sort(key=lambda x: x.startTime)
+
+		for i in range(3):
+			e = self.evts[i]
+			box = self.ids["evt_"+str(i)]
+			box.eventName = time.strftime("%m/%d/%y: ", e.startTime) + e.name
+			svrs = [Server(name, "") for name in e.instances]
+			svrs.sort()
+			box.servers = makeServersString([svr.name for svr in svrs])
 
 
 	def update(self, *args):
+		if not self.setupDone:
+			self.updateServers()
+			self.updateCalendar()
+			self.setupDone = True
 		if self.oldRunTime != args[0]:
 			if args[0] % self.updateTime == 0:
-				self.updateData()
+				self.updateServers()
 			self.oldRunTime = args[0]
 
 	def updateData(self):
 		Logger.info("Salesforce Status: Updating data.")
-		self.updateServers()
-		self.updateBoxes()
 
 
-class SalesforceServer(RelativeLayout):
+def makeServersString(instances, amount = 10):
+	if len(instances) > amount:
+		l = instances[:amount]
+		extras = len(instances) - amount
+		return ", ".join(l) + " + " + str(extras) + " more"
+	else:
+		return ", ".join(instances)
 
-	name = StringProperty()
-	source = StringProperty()
+class EventBox(RelativeLayout):
+
+	eventName = StringProperty()
+	servers = StringProperty()
 
 	def __init__(self,**kwargs):
-		super(SalesforceServer, self).__init__(**kwargs)
+		super(EventBox, self).__init__(**kwargs)
+		
 
 
 if __name__ == "__main__":
@@ -150,3 +183,26 @@ if __name__ == "__main__":
 		servers.sort()
 		for server in servers: print(server)
 		print(len(servers))
+
+	print("Getting upcoming events...")
+
+	r = requests.get("https://api.status.salesforce.com/v1/maintenances?startTime="+time.strftime("%Y-%m-%d"))
+	if r.status_code == 200:
+		jsonData = json.loads(r.text)
+		evts = {}
+		for evt in jsonData:
+			name = evt["name"]
+			timeString = evt["plannedStartTime"]
+			start = time.strptime(timeString,"%Y-%m-%dT%H:%M:%S.000Z")
+			if timeString+name not in evts:
+				evts[timeString+name] = Event(name, set(evt["instanceKeys"]), start)
+			else:
+				for server in list(evt["instanceKeys"]):
+					evts[timeString+name].instances.add(server)
+		evts = list(evts.values())
+		evts.sort(key=lambda x: x.startTime)
+
+
+	instances = ["NA"+str(i) for i in range(20)]
+
+	print(makeServersString(instances, 10))
