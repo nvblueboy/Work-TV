@@ -94,9 +94,11 @@ class SalesforceStatusApp(RelativeLayout):
 				if len(self.servers) == 0:
 					self.statusString = "All servers operational."
 					self.affectedServers = ""
+					self.ids.status.pos_hint = {"top":.7}
 				else:
 					self.statusString = "Servers are impacted."
 					self.affectedServers = makeServersString([svr.name for svr in self.servers], 8)
+					self.ids.status.pos_hint = {"top":.9}
 			except:
 				Logger.error("Salesforce Status: Could not parse JSON." + r.text)
 		else:
@@ -125,7 +127,7 @@ class SalesforceStatusApp(RelativeLayout):
 			box.eventName = time.strftime("%m/%d/%y: ", e.startTime) + e.name
 			svrs = [Server(name, "") for name in e.instances]
 			svrs.sort()
-			box.servers = makeServersString([svr.name for svr in svrs])
+			box.servers = makeServersString([svr.name for svr in svrs], 6)
 
 
 	def update(self, *args):
