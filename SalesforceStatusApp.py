@@ -130,16 +130,17 @@ class SalesforceStatusApp(RelativeLayout):
 
 	def update(self, *args):
 		if not self.setupDone:
-			self.updateServers()
-			self.updateCalendar()
+			self.updateData()
 			self.setupDone = True
 		if self.oldRunTime != args[0]:
 			if args[0] % self.updateTime == 0:
-				self.updateServers()
+				self.updateData()
 			self.oldRunTime = args[0]
 
 	def updateData(self):
 		Logger.info("Salesforce Status: Updating data.")
+		self.updateServers()
+		self.updateCalendar()
 
 
 def makeServersString(instances, amount = 10):
