@@ -96,7 +96,12 @@ class SalesforceStatusApp(RelativeLayout):
 					self.affectedServers = ""
 					self.ids.status.pos_hint = {"top":.7}
 				else:
+					issues = {svr.status.upper() for svr in self.servers}
 					self.statusString = "Servers are impacted."
+					if "MINOR_INCIDENT_CORE" in issues:
+						self.statusString = "Minor incident."
+					if "MAJOR_INCIDENT_CORE" in issues:
+						self.statusString = "Major incident."
 					self.affectedServers = makeServersString([svr.name for svr in self.servers], 8)
 					self.ids.status.pos_hint = {"top":.9}
 			except:
