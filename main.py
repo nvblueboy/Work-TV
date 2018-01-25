@@ -219,11 +219,10 @@ class AppContainer(RelativeLayout):
 				self.ids.Carousel.load_next()
 
 			if self.runTime % self.weatherUpdate == 0:
-				if self.weatherUpdated:
-					Logger.info("AppContainer: Loading weather")
-					self.weatherUpdated = True
-					self.weatherString = weather.getWeather(self.weatherLocation)
-					Logger.info("AppContainer: Weather String: "+self.weatherString)
+				Logger.info("AppContainer: Loading weather")
+				self.weatherUpdated = True
+				self.weatherString = weather.getWeather(self.weatherLocation)
+				Logger.info("AppContainer: Weather String: "+self.weatherString)
 					
 			else:
 				self.weatherUpdated = False
