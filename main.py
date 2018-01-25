@@ -111,6 +111,8 @@ class AppContainer(RelativeLayout):
 		self.appWidgets = {}
 		self.slideWidgets = {}
 
+		self.frameStartTime = 0
+
 
 	def setCaptionBox(self,captionBox):
 		self.captionBox = captionBox
@@ -215,8 +217,9 @@ class AppContainer(RelativeLayout):
 			self.oldTime = int(time.time())
 			self.runTime += 1
 
-			if self.runTime % slide.length == 0:
+			if self.runTime - self.frameStartTime >= slide.length:
 				self.ids.Carousel.load_next()
+				self.frameStartTime = self.runTime
 
 			if self.runTime % self.weatherUpdate == 0:
 				Logger.info("AppContainer: Loading weather")
