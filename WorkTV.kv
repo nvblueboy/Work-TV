@@ -1,5 +1,10 @@
 #: include ImageApp.kv
 #: include TimeZoneApp.kv
+#: include WeatherApp.kv
+#: include TrafficApp.kv
+#: include TrafficTimeApp.kv
+#: include NewsApp.kv
+#: include SalesforceStatusApp.kv
 
 <AppContainer>
 	canvas.before:
@@ -10,19 +15,7 @@
 	Carousel:
 		id:Carousel
 		loop:True
-		TimeZoneApp:
-			headline:""
-			caption: ""
-			size_hint:(1,.8)
-			pos_hint:{"top":1}
-		ImageApp:
-			source:"./images/mountain.jpg"
-			headline:"It's pretty"
-			caption: "They're mountains aren't they nice"
-		ImageApp:
-			source:"./images/powerof10slide.png"
-			headline:"Power Of 10"
-			caption: "10 People, 10 Years, $10 million in impact"
+
 
 
 <BottomRibbon>

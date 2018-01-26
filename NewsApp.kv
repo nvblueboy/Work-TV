@@ -1,0 +1,34 @@
+<NewsApp>
+	headline:root.headline
+	caption:root.caption
+	article_headline:"Loading article..."
+	article_source:""
+	qr_link:"https://api.qrserver.com/v1/create-qr-code/?margin=10&data=http://dylantbowman.com"
+	FloatLayout:
+		AsyncImage:
+			id:image
+			source: root.article_source
+			allow_stretch:True
+
+			pos_hint: {'center_x': .5, 'center_y': .5}
+	RelativeLayout:
+		Label:
+			text: root.article_headline
+			color: 1,1,1,1
+			outline_color: 0,0,0,1
+			font_size:"90sp"
+			font_name:"./fonts/Roboto-Light.ttf"
+			outline_width: 2
+			size:self.size
+			size_hint:(.9,.75)
+			pos_hint:{"top":.97, "right":.97}
+			text_size: self.width, self.height
+			halign: "right"
+			valign: "top"
+		AsyncImage:
+			id:qr
+			source: root.qr_link
+			size:self.size
+			size_hint:(.1,.1)
+			
+			pos_hint:{'right':.97, 'top':.35}

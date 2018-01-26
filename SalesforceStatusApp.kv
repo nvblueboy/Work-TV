@@ -1,0 +1,71 @@
+<SalesforceStatusApp>
+	headline:root.headline
+	caption:root.caption
+	size_hint:(1,.8)
+	pos_hint: {"top":1}
+	RelativeLayout:
+		id:mainLayout
+		canvas.before:
+			Color: 
+				rgba:1,1,1,1
+			Rectangle:
+				size:self.size
+		RelativeLayout:
+			canvas.before:
+				Color:
+					rgba:0,0,1,0
+				Rectangle:
+					size:self.size
+			size_hint: (1,.3)
+			pos_hint: {"top":1}
+			Label: 
+				id:status
+				text:root.statusString
+				font_size:"120sp"
+				font_name:"./fonts/Roboto-Thin.ttf"
+				color: (.196,.416,.702,1)
+				text_size: self.width, None
+				size_hint: 1, .5
+				pos_hint:{"top":.9}
+				height:self.texture_size[1]
+				halign: "center"
+			Label: 
+				id:affectedServers
+				text:root.affectedServers
+				font_size:"70sp"
+				font_name:"./fonts/Roboto-Thin.ttf"
+				color: (.196,.416,.702,1)
+				text_size: self.width, None
+				size_hint: 1, .3
+				pos_hint:{"top":.3}
+				height:self.texture_size[1]
+				halign: "center"
+		RelativeLayout:
+			id:forecastLayout
+			size_hint: (.9,.6)
+			pos_hint:{"top":.65, "right":.95}
+			BoxLayout:
+				orientation:"vertical"
+				EventBox:
+					id:evt_0
+				EventBox
+					id:evt_1
+				EventBox
+					id:evt_2
+
+<EventBox>
+
+	BoxLayout:
+		orientation:"vertical"
+		Label:
+			text:root.eventName
+			font_size:"70sp"
+			font_name:"./fonts/Roboto-Light.ttf"
+			color: (.196,.416,.702,1)
+			size:self.size
+		Label:
+			text:root.servers
+			font_size:"40sp"
+			font_name:"./fonts/Roboto-Thin.ttf"
+			color: (.196,.416,.702,1)
+			size:self.size

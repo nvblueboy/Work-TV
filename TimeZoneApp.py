@@ -24,8 +24,17 @@ class TimeZoneApp(RelativeLayout):
 
 	date = StringProperty()
 
+	location = ""
+
 	def __init__(self,**kwargs):
 		super(TimeZoneApp, self).__init__(**kwargs)
+		if "app" in kwargs:
+			self.app = kwargs["app"]
+			self.setup()
+
+	def setup(self):
+		self.headline = self.app.head
+		self.caption = self.app.cap
 
 	def update(self, *args):
 		now = datetime.datetime.now()
@@ -41,7 +50,7 @@ class TimeZoneApp(RelativeLayout):
 		eastern_dt = pacific_dt.astimezone(self.easterntz)
 		self.eastern = eastern_dt.strftime(self.fmt).lstrip("0")
 
-		self.date = str(time.strftime("%A, %B %d, %Y"))
+		self.date = str(time.strftime("%A, %B ")) + str(time.strftime("%d, ")).lstrip("0") + str(time.strftime("%Y"))
 
 		
 
