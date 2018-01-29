@@ -5,7 +5,7 @@ from kivy.core.image import Image
 from kivy.properties import StringProperty
 from kivy.logger import Logger
 
-import requests, json
+import jsonRequests
 
 class NewsApp(FloatLayout):
 
@@ -63,30 +63,25 @@ class NewsApp(FloatLayout):
 
 	def updateData(self):
 		url = "https://api.nytimes.com/svc/topstories/v2/"+self.location+".json?api-key="+self.key
-		try:
-			r = requests.get(url)
-			if r.status_code == 200:
-				jsonData = json.loads(r.text)
-				result = jsonData["results"][0]
-				if self.stringDict != None:
-					# If a stringDict is wired up, then find an article not yet shown.
-					count = 0
-					while jsonData["results"][count]["title"].lower() in self.stringDict.values():
-						count += 1
-					result = jsonData["results"][count]
-					self.stringDict[self.id] = result["title"].lower()
-				title = result["title"]
-				img = ""
-				for m in result["multimedia"]:
-					if m["format"] == "superJumbo":
-						img = m["url"]
-				self.article_source = img
-				self.article_headline = title
-				self.article_link = result["url"]
-				self.qr_link = "https://api.qrserver.com/v1/create-qr-code/?data="+self.article_link
-			else:
-				Logger.info("NewsApp: Status code was not 200. Printing body.")
-				Logger.info(r.text)
-
-		except Exception as e:
-			Logger.error("NewsApp: There was an exception: "+str(e))
+		response = jsonRequests.getResponse(url)
+		if response.status:
+			jsonData = response.data
+			result = jsonData["results"][0]
+			if self.stringDict != None:
+				# If a stringDict is wired up, then find an article not yet shown.
+				count = 0
+				while jsonData["results"][count]["title"].lower() in self.stringDict.values():
+					count += 1
+				result = jsonData["results"][count]
+				self.stringDict[self.id] = result["title"].lower()
+			title = result["title"]
+			img = ""
+			for m in result["multimedia"]:
+				if m["format"] == "superJumbo":
+					img = m["url"]
+			self.article_source = img
+			self.article_headline = title
+			self.article_link = result["url"]
+			self.qr_link = "https://api.qrserver.com/v1/create-qr-code/?data="+self.article_link
+		else:
+			Logger.error("NewsApp: Couldn't get news: "+response.message)

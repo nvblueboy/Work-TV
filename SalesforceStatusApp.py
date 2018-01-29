@@ -5,7 +5,9 @@ from kivy.core.image import Image
 from kivy.properties import StringProperty
 from kivy.logger import Logger
 
-import requests, json, time
+
+import jsonRequests
+import time
 
 class Server():
 
@@ -79,40 +81,36 @@ class SalesforceStatusApp(RelativeLayout):
 		self.caption = self.app.cap
 
 	def updateServers(self):
-		Logger.info("Salesforce Status: Updating info.")
 		self.servers = []
 		count = 0
-		r = requests.get("https://api.status.salesforce.com/v1/instances/status")
-		if r.status_code == 200:
-			try:
-				jsonData = json.loads(r.text)
-				self.servers = []
-				for server in jsonData:
-					if server["status"] != "OK":
-						s = Server(server["key"],server["status"])
-						self.servers.append(s)
-				if len(self.servers) == 0:
-					self.statusString = "All servers operational."
-					self.affectedServers = ""
-					self.ids.status.pos_hint = {"top":.7}
-				else:
-					issues = {svr.status.upper() for svr in self.servers}
-					self.statusString = "Servers are impacted."
-					if "MINOR_INCIDENT_CORE" in issues:
-						self.statusString = "Minor incident."
-					if "MAJOR_INCIDENT_CORE" in issues:
-						self.statusString = "Major incident."
-					self.affectedServers = makeServersString([svr.name for svr in self.servers], 8)
-					self.ids.status.pos_hint = {"top":.9}
-			except:
-				Logger.error("Salesforce Status: Could not parse JSON." + r.text)
+		response = jsonRequests.getResponse("https://api.status.salesforce.com/v1/instances/status")
+		if response.status:
+			jsonData = response.data
+			self.servers = []
+			for server in jsonData:
+				if server["status"] != "OK":
+					s = Server(server["key"],server["status"])
+					self.servers.append(s)
+			if len(self.servers) == 0:
+				self.statusString = "All servers operational."
+				self.affectedServers = ""
+				self.ids.status.pos_hint = {"top":.7}
+			else:
+				issues = {svr.status.upper() for svr in self.servers}
+				self.statusString = "Servers are impacted."
+				if "MINOR_INCIDENT_CORE" in issues:
+					self.statusString = "Minor incident."
+				if "MAJOR_INCIDENT_CORE" in issues:
+					self.statusString = "Major incident."
+				self.affectedServers = makeServersString([svr.name for svr in self.servers], 8)
+				self.ids.status.pos_hint = {"top":.9}
 		else:
-			Logger.error("Salesforce Status: Couldn't pull Salesforce status, status code: "+str(r.status_code))
+			Logger.error("Salesforce Status: Couldn't get latest calendar: "+response.message)
 
 	def updateCalendar(self):
-		r = requests.get("https://api.status.salesforce.com/v1/maintenances?startTime="+time.strftime("%Y-%m-%d"))
-		if r.status_code == 200:
-			jsonData = json.loads(r.text)
+		response = jsonRequests.getResponse("https://api.status.salesforce.com/v1/maintenances?startTime="+time.strftime("%Y-%m-%d"))
+		if response.status:
+			jsonData = response.data
 			evts = {}
 			for evt in jsonData:
 				name = evt["name"]
@@ -125,6 +123,8 @@ class SalesforceStatusApp(RelativeLayout):
 						evts[timeString+name].instances.add(server)
 			self.evts = list(evts.values())
 			self.evts.sort(key=lambda x: x.startTime)
+		else:
+			Logger.error("Salesforce status: Couldn't get the latest status: "+response.message)
 
 		for i in range(3):
 			e = self.evts[i]

@@ -1,40 +1,42 @@
 ##Handles all weather.
 from kivy.logger import Logger
 
-import requests, json
+import jsonRequests
 
 import time
+
+oldWeather = "Loading weather..."
 
 def getWeather(location):
 	baseurl = "https://query.yahooapis.com/v1/public/yql?q="
 	query = 'select item.condition from weather.forecast where woeid in (select woeid from geo.places(1) where text="'+location+'")'
 	form = "&format=json"
-	r = requests.get(baseurl+query+form)
-        Logger.info("Weather Module: Updaing weather string @ "+time.strftime("%d %b %Y %H:%M:%S"))
-	if (r.status_code==200):
-		try:
-			jsonData = json.loads(r.text)
-			condition = jsonData["query"]["results"]["channel"]["item"]["condition"]
-			return condition["temp"] + " F | " + condition["text"]
-		except:
-			Logger.error("Weather Module: Something went wrong: "+r.text)
-			return "Failed to get weather."
+	response = jsonRequests.getResponse(baseurl+query+form)
+	if response.status:
+		jsonData = response.data
+		condition = jsonData["query"]["results"]["channel"]["item"]["condition"]
+		oldWeather = condition["temp"] + " F | " + condition["text"]
+	else:
+		Logger.error("Weather Module: Had issues: "+response.message)
+	return oldWeather
+
+forecast = ""
+condition = ""
 
 def getWeather_app(location):
 	baseurl = "https://query.yahooapis.com/v1/public/yql?q="
 	query = 'select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="'+location+'")'
 	form = "&format=json"
-	r = requests.get(baseurl+query+form)
-	Logger.info("Weather Module: Updating weather app @ "+time.strftime("%d %b %Y %H:%M:%S"))
-	if (r.status_code==200):
-		try:
-			jsonData = json.loads(r.text)
-			item = jsonData["query"]["results"]["channel"]["item"]
-			forecast=item["forecast"]
-			condition=item["condition"]
-			return forecast, condition
-		except:
-			print("weather.getWeather_app(): Failed to get latest weather.")
-			return False
+	response = jsonRequests.getResponse(baseurl+query+form)
+	if response.status:
+		jsonData = response.data
+		item = jsonData["query"]["results"]["channel"]["item"]
+		forecast=item["forecast"]
+		condition=item["condition"]
+	else:
+		Logger.error("Weather Module: Had issues: "+response.message)
+	return forecast, condition
+
 if __name__ == "__main__":
-	print(getWeather_app("San+Juan+Capistrano,CA"));
+	print(getWeather("San+Juan+Capistrano,CA"))
+	print(getWeather_app("San+Juan+Capistrano,CA"))
