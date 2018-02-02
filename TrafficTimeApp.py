@@ -3,6 +3,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.core.image import Image
 from kivy.properties import StringProperty, ObjectProperty
 
+import requests, json
 import jsonRequests
 
 class TrafficTimeApp(BoxLayout):
@@ -52,15 +53,19 @@ class TrafficTimeApp(BoxLayout):
 			t = self.getTrafficTime(self.here, dest, self.api_key)
 			if t != -1:
 				obj.time = str(t)
+				
+	oldAcceptable = ""
 
 	def getTrafficTime(self, origin, destination, api_key):
 		url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+("+".join(origin.split(" ")))+"&destinations="+("+".join(destination.split(" ")))+"&departure_time=now&key="+self.api_key
 		response = jsonRequests.getResponse(url)
 		if response.status:
-			return response.data["rows"][0]["elements"][0]["duration_in_traffic"]["text"]
-		else:
-			Logger.error("TrafficTimeApp: Couldn't get latest traffic time: "+response.message)
-			return -1
+                        if "duration_in_traffic" in response.data["rows"][0]["elements"][0]:
+                            oldAcceptable = response.data["rows"][0]["elements"][0]["duration_in_traffic"]["text"]
+			return oldAcceptable
+    		else:
+                        Logger.error("TrafficTimeApp: Failed to get latest traffic time: "+response.message) 
+			return oldAcceptable
 
 
 class TrafficTimeComponent(RelativeLayout):

@@ -8,6 +8,7 @@ import time
 oldWeather = "Loading weather..."
 
 def getWeather(location):
+        global oldWeather
 	baseurl = "https://query.yahooapis.com/v1/public/yql?q="
 	query = 'select item.condition from weather.forecast where woeid in (select woeid from geo.places(1) where text="'+location+'")'
 	form = "&format=json"
