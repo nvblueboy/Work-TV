@@ -2,6 +2,7 @@ from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.core.image import Image
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.logger import Logger
 
 import requests, json
 import jsonRequests
@@ -61,11 +62,11 @@ class TrafficTimeApp(BoxLayout):
 		response = jsonRequests.getResponse(url)
 		if response.status:
                         if "duration_in_traffic" in response.data["rows"][0]["elements"][0]:
-                            oldAcceptable = response.data["rows"][0]["elements"][0]["duration_in_traffic"]["text"]
-			return oldAcceptable
+                            self.oldAcceptable = response.data["rows"][0]["elements"][0]["duration_in_traffic"]["text"]
+			return self.oldAcceptable
     		else:
                         Logger.error("TrafficTimeApp: Failed to get latest traffic time: "+response.message) 
-			return oldAcceptable
+			return self.oldAcceptable
 
 
 class TrafficTimeComponent(RelativeLayout):

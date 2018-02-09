@@ -2,6 +2,7 @@ from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.core.image import Image
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.logger import Logger
 
 import requests, json
 
@@ -39,4 +40,7 @@ class TrafficApp(RelativeLayout):
 	def updateData(self):
 		url = "https://dev.virtualearth.net/REST/v1/Imagery/Map/Road?"+self.location
 		self.source = url
-		self.img.reload()
+		try:
+			self.img.reload()
+		except:
+			Logger.info("Traffic Image App: Had issues reloading.")
