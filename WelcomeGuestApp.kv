@@ -1,0 +1,29 @@
+<WelcomeGuestApp>
+	headline:root.headline
+	caption:root.caption
+	pos_hint:{"top":1}
+	size_hint:(1,.8)
+	RelativeLayout:
+		RelativeLayout:
+			pos_hint: {"top":1}
+			size_hint:(1,.3)
+			Label:
+				id:top_text
+				text:root.top_text
+				font_size:"120sp"
+				font_name:"./fonts/Roboto-Thin.ttf"
+				color: (.196,.416,.702,1)
+				text_size: self.width, None
+				size_hint: 1, None
+				height: self.texture_size[1]
+				halign:"center"
+				valign:"center"
+		RelativeLayout:
+			pos_hint: {"top":.65}
+			size_hint:(1,.6)
+			AsyncImage:
+				allow_stretch:True
+				keep_ratio:True
+				width: self.parent.width
+				height:self.parent.width/self.image_ratio
+				source:root.image_source
