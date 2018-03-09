@@ -47,7 +47,11 @@ class WeatherApp(RelativeLayout):
 		response = jsonRequests.getResponse(baseurl+query+form)
 		if response.status:
 			jsonData = response.data
-			item = jsonData["query"]["results"]["channel"]["item"]
+			try:
+				item = jsonData["query"]["results"]["channel"]["item"]
+			except:
+				Logger.error("Weather App: jsonData was invalid.")
+				return
 			forecast=item["forecast"]
 			condition=item["condition"]
 

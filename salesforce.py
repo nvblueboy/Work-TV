@@ -1,7 +1,8 @@
 ##Salesforce integration
 
 
-import requests, json
+import requests
+import json
 
 class Slide():
 	def __init__(self, img, head, cap, length):
@@ -37,12 +38,18 @@ class App():
 
 				
 def getData(debug = False):
-	url = "https://dtb-sa.cs17.force.com/public/services/apexrest/WallBoard"
+	url = "http://softwareanywhere.com/services/apexrest/WallBoard"
 	works = True
 	r = ""
 	try:
+            if debug:
+                print("Starting request...")
             r = requests.get(url)
-        except:
+            if debug:
+                print ("Got request.")
+        except Exception as e:
+            z = e
+            print(z)
             works = False
 	if r != "" and r.status_code == 200 and works:
 		try:
