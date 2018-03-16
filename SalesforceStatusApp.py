@@ -89,8 +89,11 @@ class SalesforceStatusApp(RelativeLayout):
 			self.servers = []
 			for server in jsonData:
 				if server["status"] != "OK":
-					s = Server(server["key"],server["status"])
-					self.servers.append(s)
+					try:
+						s = Server(server["key"],server["status"])
+						self.servers.append(s)
+					except:
+						continue
 			if len(self.servers) == 0:
 				self.statusString = "All servers operational."
 				self.affectedServers = ""
@@ -130,7 +133,12 @@ class SalesforceStatusApp(RelativeLayout):
 			e = self.evts[i]
 			box = self.ids["evt_"+str(i)]
 			box.eventName = time.strftime("%m/%d/%y: ", e.startTime) + e.name
-			svrs = [Server(name, "") for name in e.instances]
+			svrs = []
+			for name in e.instances:
+				try:
+					svrs.append(Server(name, ""))
+				except:
+					continue
 			svrs.sort()
 			box.servers = makeServersString([svr.name for svr in svrs], 6)
 
@@ -182,17 +190,22 @@ if __name__ == "__main__":
 
 	servers = []
 	count = 0
-	r = requests.get("https://api.status.salesforce.com/v1/instances/status")
-	if r.status_code == 200:
-		jsonData = json.loads(r.text)
+	response = jsonRequests.getResponse("https://api.status.salesforce.com/v1/instances/status")
+	if response.status:
+		jsonData = response.data
 		for server in jsonData:
-			s = Server(server["key"],server["status"])
-			servers.append(s)
+			try:
+				s = Server(server["key"],server["status"])
+				servers.append(s)
+			except:
+				continue
 		servers.sort()
 		for server in servers: print(server)
 		print(len(servers))
 
 	print("Getting upcoming events...")
+
+	import requests
 
 	r = requests.get("https://api.status.salesforce.com/v1/maintenances?startTime="+time.strftime("%Y-%m-%d"))
 	if r.status_code == 200:
