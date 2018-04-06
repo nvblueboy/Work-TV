@@ -2,13 +2,13 @@
 	source: root.source
 	headline:root.headline
 	caption:root.caption
-	RelativeLayout:
-		AsyncImage:
-			id:image
-			source: root.source
-			allow_stretch:True
-			keep_ratio:True
-			width: self.parent.width
-			height:self.parent.width/self.image_ratio
-			pos_hint: {"top":1}
-			size_hint:(1,.8)
+	pos_hint:{"top":1}
+	size_hint:(1,1)
+	AsyncImage:
+		id:image
+		source: root.source
+		allow_stretch:True
+		keep_ratio:True
+		width: self.parent.width
+		height:self.parent.width/self.image_ratio			
+		size_hint:(1,1)

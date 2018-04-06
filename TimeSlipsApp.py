@@ -37,6 +37,7 @@ class TimeSlipsApp(RelativeLayout):
 			self.oldRunTime = args[0]
 
 	def updateData(self):
+		Logger.info("Time Slips App: Updating Time Slips.")
 		url = "https://www.softwareanywhere.com/services/apexrest/TimeSlips"
 		response = jsonRequests.getResponse(url)
 		if response.status:

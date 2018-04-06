@@ -10,7 +10,6 @@ def multiplyColor(c, a): return tuple((i*a for i in c))
 
 def nearColor(a,  b):
 	l = [abs(x-y) for (x,y) in zip(a,b)]
-	print(l)
 	threshold = .1
 	for i in l:
 		if i > threshold:
