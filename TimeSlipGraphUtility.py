@@ -41,6 +41,10 @@ plt.rc('font',serif='Roboto')
 titleFont = {"fontsize":70, "family":'serif', "weight":"light"}
 
 
+#axis font
+axisFont = {"fontsize":30}
+
+
 
 def saveImage(jsonData, outputFile):
 
@@ -64,16 +68,21 @@ def saveImage(jsonData, outputFile):
 		if internal in accts:
 			accts.remove(internal)
 
+	internals.sort()
+
 	accts = accts + internals
 
 
-	colorDict = {"1 - SA - Internal":(.4,.4,.4), "2 - SA - App Dev":(.7,.7,.7)} # Map account to color.
+	colorDict = {"1 - SA - Internal":(.5,.5,.5), "2 - SA - App Dev":(.7,.7,.7)} # Map account to color.
 	usedColors = []
+
+	bars = []
+	acct_list = []
 
 	for result in jsonData["results"]:
 		if len(result["accts"]) > 0:
-			name = result["name"]
-			people.append(name)
+			resource_name = result["name"]
+			people.append(resource_name)
 			bottom = 0
 			for acct_name in accts:
 				for acct in result["accts"]:
@@ -90,10 +99,16 @@ def saveImage(jsonData, outputFile):
 
 						color = colorDict[name]
 						amt = acct["amount"]
-						plt.bar(index, (amt), bar_width, bottom=bottom, color=color)
+						p, = plt.bar(index, (amt), bar_width, bottom=bottom, color=color, label=name)
+						if name not in acct_list:
+							bars.append(p)
+							acct_list.append(name)
+			
 						bottom = bottom + amt
 
 			index = index + 1
+
+	plt.legend(handles=bars, labels=acct_list, loc=1, fontsize="large")
 
 	low_bar_height = 4.5
 
@@ -111,6 +126,8 @@ def saveImage(jsonData, outputFile):
 	plt.tick_params(axis='both', which='major', labelsize=17)
 	plt.xticks(np.arange(len(people)), people)
 	plt.yticks(np.arange(0, 12, 2))
+	plt.ylabel('Hours Spent', fontdict = axisFont)
+
 
 	plt.savefig(outputFile)
 
