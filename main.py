@@ -24,7 +24,8 @@ appObjs = {"TimeZoneApp":TimeZoneApp.TimeZoneApp,
 		   "TrafficTimeApp":TrafficTimeApp.TrafficTimeApp,
 		   "NewsApp":NewsApp.NewsApp,
 		   "SalesforceStatusApp":SalesforceStatusApp.SalesforceStatusApp,
-                   "WelcomeGuestApp":WelcomeGuestApp.WelcomeGuestApp}
+           "WelcomeGuestApp":WelcomeGuestApp.WelcomeGuestApp,
+           "TimeSlipsApp":TimeSlipsApp.TimeSlipsApp}
 
 class WorkTV(RelativeLayout):
 	def __init__(self,**kwargs):
