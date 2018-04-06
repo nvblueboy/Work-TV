@@ -6,6 +6,7 @@
 #: include NewsApp.kv
 #: include SalesforceStatusApp.kv
 #: include WelcomeGuestApp.kv
+#: include TimeSlipsApp.kv
 
 <AppContainer>
 	canvas.before:
@@ -16,6 +17,9 @@
 	Carousel:
 		id:Carousel
 		loop:True
+		TimeSlipsApp:
+			headline: "Do your work"
+			caption: "Really, do it"
 
 
 
