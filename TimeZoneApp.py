@@ -22,6 +22,9 @@ class TimeZoneApp(RelativeLayout):
 	easterntz = pytz.timezone('US/Eastern')
 	eastern = StringProperty()
 
+	alaskatz = pytz.timezone('US/Alaska')
+	alaska = StringProperty()
+
 	date = StringProperty()
 
 	location = ""
@@ -49,6 +52,9 @@ class TimeZoneApp(RelativeLayout):
 
 		eastern_dt = pacific_dt.astimezone(self.easterntz)
 		self.eastern = eastern_dt.strftime(self.fmt).lstrip("0")
+
+		alaska_dt = pacific_dt.astimezone(self.alaskatz)
+		self.alaska = alaska_dt.strftime(self.fmt).lstrip("0")
 
 		self.date = str(time.strftime("%A, %B ")) + str(time.strftime("%d, ")).lstrip("0") + str(time.strftime("%Y"))
 

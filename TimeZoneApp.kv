@@ -18,6 +18,9 @@
 				font_size:'100sp'
 		BoxLayout:
 			TimeZone:
+				text:root.alaska
+				zone:"Alaska"
+			TimeZone:
 				text:root.pacific
 				zone:"Pacific"
 			TimeZone:
@@ -30,7 +33,6 @@
 			TimeZone:
 				text:root.eastern
 				zone:"Eastern"
-
 <TimeZone>
 	text:""
 	zone:""
@@ -45,12 +47,12 @@
 			color: (.196,.416,.702,1)
 			size:self.size
 			font_name:"./fonts/Roboto-Light.ttf"
-			font_size:'100sp'
+			font_size:'80sp'
 			pos_hint:{'top':1.25}
 		Label:
 			text:root.zone
 			color: (.196,.416,.702,1)
 			size:self.size
 			font_name:"./fonts/Roboto-Thin.ttf"
-			font_size:'100sp'
+			font_size:'80sp'
 			pos_hint:{'top':.9}
