@@ -79,9 +79,10 @@ class NewsApp(FloatLayout):
 			for m in result["multimedia"]:
 				if m["format"] == "superJumbo":
 					img = m["url"]
-			self.article_source = img
-			self.article_headline = title
-			self.article_link = result["url"]
-			self.qr_link = "https://api.qrserver.com/v1/create-qr-code/?data="+self.article_link
+			if img != self.article_source:
+				self.article_source = img
+				self.article_headline = title
+				self.article_link = result["url"]
+				self.qr_link = "https://api.qrserver.com/v1/create-qr-code/?data="+self.article_link
 		else:
 			Logger.error("NewsApp: Couldn't get news: "+response.message)

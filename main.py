@@ -18,6 +18,9 @@ import ImageApp, TimeZoneApp, WeatherApp, TrafficApp, TrafficTimeApp, NewsApp, S
 import weather
 
 
+restart_at_midnight = False
+restart_time = "1426"
+
 appObjs = {"TimeZoneApp":TimeZoneApp.TimeZoneApp, 
 		   "WeatherApp":WeatherApp.WeatherApp, 
 		   "TrafficApp":TrafficApp.TrafficApp,
@@ -46,10 +49,13 @@ class WorkTV(RelativeLayout):
 		self.ids.appContainer.setApps(apps)
 
 	def updateCarousel(self, *args):
-		apps, slides = salesforce.getData()
-		if apps or slides:
-			self.setSlides(slides)
-			self.setApps(apps)
+		data = salesforce.getData()
+		if data:
+			apps = data[0]
+			slides = data[1]
+			if apps or slides:
+				self.setSlides(slides)
+				self.setApps(apps)
 
 
 
@@ -255,4 +261,5 @@ class WorkTVApp(App):
 		return self.appWindow
 
 if __name__ == "__main__":
+	print("Loading app...")
 	WorkTVApp().run()

@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import font_manager as fm, rcParams
 
+from kivy.logger import Logger
+
 import json, random
 import jsonRequests
 
@@ -10,7 +12,7 @@ def multiplyColor(c, a): return tuple((i*a for i in c))
 
 def nearColor(a,  b):
 	l = [abs(x-y) for (x,y) in zip(a,b)]
-	threshold = .1
+	threshold = .05
 	for i in l:
 		if i > threshold:
 			return False
@@ -79,6 +81,8 @@ def saveImage(jsonData, outputFile):
 	bars = []
 	acct_list = []
 
+	Logger.info("Time Slip Grapher: Adding bars.")
+
 	for result in jsonData["results"]:
 		if len(result["accts"]) > 0:
 			resource_name = result["name"]
@@ -122,14 +126,17 @@ def saveImage(jsonData, outputFile):
 
 	plt.plot(np.arange(len(people)), values , color=(0,0,0))
 
-	plt.title('Hours by account',fontdict=titleFont)
-	plt.tick_params(axis='both', which='major', labelsize=17)
+	plt.title('Time Slip Leaderboard',fontdict=titleFont)
+	plt.tick_params(axis='both', which='major', labelsize=14)
 	plt.xticks(np.arange(len(people)), people)
 	plt.yticks(np.arange(0, 12, 2))
 	plt.ylabel('Hours Spent', fontdict = axisFont)
 
+	Logger.info("Time Slip Grapher: Saving...")
 
 	plt.savefig(outputFile)
+
+	Logger.info("Time Slip Grapher: Done!")
 
 def getJsonData():
 	url = "https://www.softwareanywhere.com/services/apexrest/TimeSlips"
@@ -143,6 +150,5 @@ def getJsonData():
 
 if __name__ == "__main__":
 	jsonData = getJsonData()
-
 	saveImage(jsonData, "testGraph.png")
 

@@ -4,9 +4,10 @@
 	caption:root.caption
 	pos_hint:{"top":1}
 	size_hint:(1,1)
+	img: asyn_image
 	AsyncImage:
-		id:image
-		source: root.source
+		id:asyn_image
+		nocache: True
 		allow_stretch:True
 		keep_ratio:True
 		width: self.parent.width

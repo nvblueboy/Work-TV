@@ -2,6 +2,7 @@ from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.core.image import Image
 from kivy.properties import StringProperty
+from kivy.properties import ObjectProperty
 from kivy.logger import Logger
 
 
@@ -12,11 +13,13 @@ class TimeSlipsApp(RelativeLayout):
 
 	lastValidData = ""
 
-	updateTime = 60
+	updateTime = 300
 
 	oldRunTime = 0
 
 	source=StringProperty()
+	img = ObjectProperty()
+
 
 	def __init__(self,**kwargs):
 		super(TimeSlipsApp, self).__init__(**kwargs)
@@ -37,12 +40,13 @@ class TimeSlipsApp(RelativeLayout):
 			self.oldRunTime = args[0]
 
 	def updateData(self):
-		Logger.info("Time Slips App: Updating Time Slips.")
 		url = "https://www.softwareanywhere.com/services/apexrest/TimeSlips"
 		response = jsonRequests.getResponse(url)
 		if response.status:
 			if response.raw != self.lastValidData:
+				Logger.info("Time Slips App: Time Slips Changed.")
 				parsed = json.loads(response.raw.decode('string-escape').strip('"'))
 				TimeSlipGraphUtility.saveImage(parsed, "timeSlips.png")
 				self.lastValidData = response.raw
-				self.source = "timeSlips.png"
+				self.img.source = "timeSlips.png"
+				self.img.reload()
