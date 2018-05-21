@@ -61,12 +61,11 @@ class TrafficTimeApp(BoxLayout):
 		url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+("+".join(origin.split(" ")))+"&destinations="+("+".join(destination.split(" ")))+"&departure_time=now&key="+self.api_key
 		response = jsonRequests.getResponse(url)
 		if response.status:
-                        if "duration_in_traffic" in response.data["rows"][0]["elements"][0]:
-                            self.oldAcceptable = response.data["rows"][0]["elements"][0]["duration_in_traffic"]["text"]
-			return self.oldAcceptable
-    		else:
-                        Logger.error("TrafficTimeApp: Failed to get latest traffic time: "+response.message) 
-			return self.oldAcceptable
+			if "duration_in_traffic" in response.data["rows"][0]["elements"][0]:
+				self.oldAcceptable = response.data["rows"][0]["elements"][0]["duration_in_traffic"]["text"]
+		else:
+			Logger.error("TrafficTimeApp: Failed to get latest traffic time: "+response.message) 
+		return self.oldAcceptable
 
 
 class TrafficTimeComponent(RelativeLayout):
