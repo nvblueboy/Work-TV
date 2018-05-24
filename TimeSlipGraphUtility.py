@@ -83,7 +83,20 @@ def saveImage(jsonData, outputFile):
 
 	Logger.info("Time Slip Grapher: Adding bars.")
 
+	person_map = {}
+
 	for result in jsonData["results"]:
+		if len(result["accts"]) > 0:
+			name = result["name"]
+			person_map[name] = 0
+			for acct in result["accts"]:
+				person_map[name] += acct["amount"]
+
+	results = jsonData["results"]
+
+	results.sort(key = lambda x: person_map[x["name"]], reverse=True)
+
+	for result in results:
 		if len(result["accts"]) > 0:
 			resource_name = result["name"]
 			people.append(resource_name)
