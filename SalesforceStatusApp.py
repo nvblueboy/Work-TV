@@ -9,6 +9,8 @@ from kivy.logger import Logger
 import jsonRequests
 import time
 
+from BaseApp import RelativeApp
+
 class Server():
 
 	order = ["NA","CS","EU","AP"]
@@ -54,7 +56,7 @@ class Event():
 		self.instances = instances
 		self.startTime = startTime
 
-class SalesforceStatusApp(RelativeLayout):
+class SalesforceStatusApp(RelativeApp):
 
 	updateTime = 300
 
@@ -69,16 +71,12 @@ class SalesforceStatusApp(RelativeLayout):
 
 	def __init__(self,**kwargs):
 		super(SalesforceStatusApp, self).__init__(**kwargs)
-		if "app" in kwargs:
-			self.app = kwargs["app"]
-			self.setup()
+
 		self.statusString = "Loading server data..."
 		self.affectedServers = ""
 
 	def setup(self):
-		Logger.info("Salesforce Status: Setting up module.")
-		self.headline = self.app.head
-		self.caption = self.app.cap
+		super(SalesforceStatusApp, self).setup()
 
 	def updateServers(self):
 		self.servers = []
@@ -144,13 +142,7 @@ class SalesforceStatusApp(RelativeLayout):
 
 
 	def update(self, *args):
-		if not self.setupDone:
-			self.updateData()
-			self.setupDone = True
-		if self.oldRunTime != args[0]:
-			if args[0] % self.updateTime == 0:
-				self.updateData()
-			self.oldRunTime = args[0]
+		super(SalesforceStatusApp, self).update(*args)
 
 	def updateData(self):
 		Logger.info("Salesforce Status: Updating data.")

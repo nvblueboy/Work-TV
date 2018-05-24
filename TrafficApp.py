@@ -6,7 +6,9 @@ from kivy.logger import Logger
 
 import requests, json
 
-class TrafficApp(RelativeLayout):
+from BaseApp import RelativeApp
+
+class TrafficApp(RelativeApp):
 
 	oldRunTime = 0
 	updateTime = 600
@@ -21,21 +23,13 @@ class TrafficApp(RelativeLayout):
 
 	def __init__(self,**kwargs):
 		super(TrafficApp, self).__init__(**kwargs)
-		if "app" in kwargs:
-			self.app = kwargs["app"]
-			self.setup()
+
 
 	def setup(self):
-		self.headline = self.app.head
-		self.caption = self.app.cap
-		self.location = self.app.loc
-		self.updateData()
+		super(TrafficApp, self).setup()
 
 	def update(self, *args):
-		if self.oldRunTime != args[0]:
-			if args[0] % self.updateTime == 2:
-				self.updateData()
-			self.oldRunTime = args[0]
+		super(TrafficApp, self).update(*args)
 
 	def updateData(self):
 		url = "https://dev.virtualearth.net/REST/v1/Imagery/Map/Road?"+self.location

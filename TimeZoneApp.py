@@ -7,7 +7,9 @@ import pytz, datetime
 
 import time
 
-class TimeZoneApp(RelativeLayout):
+from BaseApp import RelativeApp
+
+class TimeZoneApp(RelativeApp):
 
 	fmt = "%I:%M:%S %p"
 	pacifictz = pytz.timezone('US/Pacific')
@@ -31,13 +33,9 @@ class TimeZoneApp(RelativeLayout):
 
 	def __init__(self,**kwargs):
 		super(TimeZoneApp, self).__init__(**kwargs)
-		if "app" in kwargs:
-			self.app = kwargs["app"]
-			self.setup()
 
 	def setup(self):
-		self.headline = self.app.head
-		self.caption = self.app.cap
+		super(TimeZoneApp, self).setup()
 
 	def update(self, *args):
 		now = datetime.datetime.now()

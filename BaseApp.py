@@ -18,7 +18,6 @@ class BoxApp(BoxLayout):
 		self.oldRunTime = 0
 
 	def setup(self):
-
 		self.headline = self.app.head
 		self.caption = self.app.cap
 		self.api_key = self.app.key
@@ -32,7 +31,6 @@ class BoxApp(BoxLayout):
 					child.setup()
 
 		updateDataFN = getattr(self, "updateData", None)
-
 		if callable(updateDataFN):
 			self.updateData()
 
@@ -77,6 +75,10 @@ class RelativeApp(RelativeLayout):
 
 				if callable(setupFN):
 					child.setup()
+
+		updateDataFN = getattr(self, "updateData", None)
+		if callable(updateDataFN):
+			self.updateData()
 
 	def update(self, *args):
 		if args[0] > self.oldRunTime + self.updateTime:

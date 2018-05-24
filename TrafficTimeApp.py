@@ -7,69 +7,74 @@ from kivy.logger import Logger
 import requests, json
 import jsonRequests
 
-class TrafficTimeApp(BoxLayout):
+from BaseApp import BoxApp
+
+class TrafficTimeApp(BoxApp):
 
 	oldRunTime = 0
 	updateTime = 600
 
 	location = ["Chapman University","John Wayne Airport","San Diego"]
 
+	destinations = []
 	objs = {}
 
 	def __init__(self,**kwargs):
 		super(TrafficTimeApp, self).__init__(**kwargs)
-		if "app" in kwargs:
-			self.app = kwargs["app"]
-			self.setup()
 
 	def setup(self):
-		self.headline = self.app.head
-		self.caption = self.app.cap
-		self.api_key = self.app.key
 		l = self.app.loc.replace(", ",",").split(",")
-		self.location = l[1:]
+		self.destinations = l[1:]
 		self.here = l[0]
-		self.updateData()
+		super(TrafficTimeApp, self).setup()
 
 	def update(self, *args):
-		if self.oldRunTime != args[0]:
-			if args[0] % self.updateTime == 10:
-				self.updateData()
-			self.oldRunTime = args[0]
+		super(TrafficTimeApp, self).update(*args)
 
 	def updateData(self):
-		for loc in self.location:
+		for loc in self.destinations:
 			if loc not in self.objs:
 				obj = TrafficTimeComponent(destination = loc, id=loc)
 				self.ids.components.add_widget(obj)
 				self.objs[loc] = obj
 				
 		for loc in self.objs.keys():
-			if loc not in self.location:
+			if loc not in self.destinations:
 				del self.objs[loc]
+		times = self.getTrafficTime(self.here, self.destinations, self.api_key)
 
-		for i in self.objs.keys():
-			obj = self.objs[i]
-			dest = obj.destination
-			t = self.getTrafficTime(self.here, dest, self.api_key)
-			if t != -1:
-				obj.time = str(t)
-				
+		if times != None:
+			for loc in times.keys():
+				if loc in self.objs:
+					self.objs[loc].time = times[loc]
+
 	oldAcceptable = ""
 
-	def getTrafficTime(self, origin, destination, api_key):
+	def getTrafficTime(self, origin, destinations, api_key):
+
+		d_query = "|".join(["+".join(x.split(" ")) for x in destinations])
+		print(d_query)
 		Logger.info("Traffic Time App: Loading times.")
-		url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+("+".join(origin.split(" ")))+"&destinations="+("+".join(destination.split(" ")))+"&departure_time=now&key="+self.api_key
+		url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+("+".join(origin.split(" ")))+"&destinations="+d_query+"&departure_time=now&key="+self.api_key
 		response = jsonRequests.getResponse(url)
+		output = None
 		if response.status:
-			if "duration_in_traffic" in response.data["rows"][0]["elements"][0]:
-				self.oldAcceptable = response.data["rows"][0]["elements"][0]["duration_in_traffic"]["text"]
-			else:
-				Logger.error("TrafficTimeApp: Could not get traffic time from response: "+response.raw)
+			output = {}
+			rows = response["rows"][0]["elements"]
+			print(json.dumps(rows, indent=4))
+			print(self.destinations)
+			for i in range(len(self.destinations)):
+				dest = self.destinations[i]
+				row = rows[i]
+				duration = -1
+				if "duration_in_traffic" in row:
+					duration = row["duration_in_traffic"]["text"]
+				output[dest] = duration
+			
 		else:
 			Logger.error("TrafficTimeApp: Failed to get latest traffic time: "+response.message) 
-			print(self.oldAcceptable)
-			return self.oldAcceptable
+
+		return output
 
 
 class TrafficTimeComponent(RelativeLayout):
