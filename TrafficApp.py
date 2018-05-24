@@ -38,7 +38,7 @@ class TrafficApp(RelativeLayout):
 			self.oldRunTime = args[0]
 
 	def updateData(self):
-		url = "https://rsz.io/dev.virtualearth.net/REST/v1/Imagery/Map/Road?"+self.location+"?format=jpg"
+		url = "https://dev.virtualearth.net/REST/v1/Imagery/Map/Road?"+self.location
 		self.source = url
 		try:
 			self.img.reload()

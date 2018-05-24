@@ -33,7 +33,7 @@ class TrafficTimeApp(BoxLayout):
 
 	def update(self, *args):
 		if self.oldRunTime != args[0]:
-			if args[0] % self.updateTime == 2:
+			if args[0] % self.updateTime == 10:
 				self.updateData()
 			self.oldRunTime = args[0]
 
@@ -58,14 +58,17 @@ class TrafficTimeApp(BoxLayout):
 	oldAcceptable = ""
 
 	def getTrafficTime(self, origin, destination, api_key):
+		Logger.info("Traffic Time App: Loading times.")
 		url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+("+".join(origin.split(" ")))+"&destinations="+("+".join(destination.split(" ")))+"&departure_time=now&key="+self.api_key
 		response = jsonRequests.getResponse(url)
 		if response.status:
-                        if "duration_in_traffic" in response.data["rows"][0]["elements"][0]:
-                            self.oldAcceptable = response.data["rows"][0]["elements"][0]["duration_in_traffic"]["text"]
-			return self.oldAcceptable
-    		else:
-                        Logger.error("TrafficTimeApp: Failed to get latest traffic time: "+response.message) 
+			if "duration_in_traffic" in response.data["rows"][0]["elements"][0]:
+				self.oldAcceptable = response.data["rows"][0]["elements"][0]["duration_in_traffic"]["text"]
+			else:
+				Logger.error("TrafficTimeApp: Could not get traffic time from response: "+response.raw)
+		else:
+			Logger.error("TrafficTimeApp: Failed to get latest traffic time: "+response.message) 
+			print(self.oldAcceptable)
 			return self.oldAcceptable
 
 

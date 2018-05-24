@@ -13,7 +13,7 @@ class TimeSlipsApp(RelativeLayout):
 
 	lastValidData = ""
 
-	updateTime = 300
+	updateTime = 60
 
 	oldRunTime = 0
 
