@@ -6,9 +6,10 @@ from kivy.logger import Logger
 
 import time
 
-class WelcomeGuestApp(RelativeLayout):
+from BaseApp import RelativeApp
+
+class WelcomeGuestApp(RelativeApp):
 	updated = False
-	oldRunTime = 0
 
 	top_text = StringProperty()
 	image_source = StringProperty()
@@ -17,14 +18,10 @@ class WelcomeGuestApp(RelativeLayout):
 		super(WelcomeGuestApp, self).__init__(**kwargs)
 		self.top_text = "Welcome to our guests!"
 		self.image_source = "./images/CULogo.jpg"
-		if "app" in kwargs:
-			self.app = kwargs["app"]
-			self.setup()
 
 
 	def setup(self):
-		self.headline = self.app.head
-		self.caption = self.app.cap
+		super(WelcomeGuestApp, self).setup()
 		self.top_text = self.app.loc
 		self.image_source = self.app.key
 

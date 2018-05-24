@@ -32,7 +32,7 @@ class JSONResponse():
 
 
 	def getValue(self,key):
-		if status:
+		if self.status:
 			return self.data[key]
 		else:
 			raise JSONResponseException("The response is not valid.")

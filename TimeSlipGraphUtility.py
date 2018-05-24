@@ -95,7 +95,6 @@ def saveImage(jsonData, outputFile):
 
 	results = jsonData["results"]
 
-	print(results)
 
 	results.sort(key = lambda x: person_map[x["name"]], reverse=True)
 

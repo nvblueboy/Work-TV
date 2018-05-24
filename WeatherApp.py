@@ -9,9 +9,9 @@ import time
 
 import weathercodes, jsonRequests
 
+from BaseApp import RelativeApp
 
-
-class WeatherApp(RelativeLayout):
+class WeatherApp(RelativeApp):
 	updated = False
 	oldRunTime = 0
 
@@ -23,22 +23,14 @@ class WeatherApp(RelativeLayout):
 
 	def __init__(self,**kwargs):
 		super(WeatherApp, self).__init__(**kwargs)
-		if "app" in kwargs:
-			self.app = kwargs["app"]
-			self.setup()
+
 		self.current_weather = "Loading weather..."
 
 	def setup(self):
-		self.headline = self.app.head
-		self.caption = self.app.cap
-		self.location = self.app.loc.replace(" ", "+")
-		self.updateData()
+		super(WeatherApp, self).setup()
 
 	def update(self, *args):
-		if self.oldRunTime != args[0]:
-			if args[0] % self.updateTime == 2:
-				self.updateData()
-			self.oldRunTime = args[0]
+		super(WeatherApp, self).update(*args)
 
 	def updateData(self):
 		baseurl = "https://query.yahooapis.com/v1/public/yql?q="

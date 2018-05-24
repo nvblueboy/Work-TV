@@ -28,11 +28,13 @@ class TimeSlipsApp(RelativeApp):
 
 	def setup(self):
 		super(TimeSlipsApp, self).setup()
+		print("Ran setup for timeslipsapp")
 
 	def update(self, *args):
 		super(TimeSlipsApp, self).update(*args)
 
 	def updateData(self):
+		print("running updateData for timeslipsapp")
 		url = "https://www.softwareanywhere.com/services/apexrest/TimeSlips"
 		response = jsonRequests.getResponse(url)
 		if response.status:
