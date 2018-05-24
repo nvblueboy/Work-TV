@@ -39,7 +39,7 @@ class JSONResponse():
 
 def getResponse(url):
 	try:
-		r = requests.get(url)
+		r = requests.get(url, timeout = 5)
 	except:
 		return JSONResponse(False, message = "Cannot reach endpoint.")
 	if r.status_code == 200:

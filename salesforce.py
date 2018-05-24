@@ -42,15 +42,15 @@ def getData(debug = False):
 	works = True
 	r = ""
 	try:
-            if debug:
-                print("Starting request...")
-            r = requests.get(url)
-            if debug:
-                print ("Got request.")
-        except Exception as e:
-            z = e
-            print(z)
-            works = False
+		if debug:
+			print("Starting request...")
+		r = requests.get(url)
+		if debug:
+			print ("Got request.")
+	except Exception as e:
+		z = e
+		print(z)
+		works = False
 	if r != "" and r.status_code == 200 and works:
 		try:
 			jsonData = json.loads(r.text.decode('string-escape').strip('"'))
@@ -68,7 +68,7 @@ def getData(debug = False):
 			appList.append(a)
 		return appList, slideList
 	if not works:
-            return False, False
+			return False, False
 
 if __name__ == "__main__":
 	apps, slides = getData(debug = True)

@@ -15,7 +15,7 @@ class TimeSlipsApp(RelativeApp):
 
 	lastValidData = ""
 
-	updateTime = 300
+	updateTime = 60
 
 	oldRunTime = 0
 

@@ -86,6 +86,7 @@ def saveImage(jsonData, outputFile):
 	person_map = {}
 
 	for result in jsonData["results"]:
+		person_map[result["name"]] = 0
 		if len(result["accts"]) > 0:
 			name = result["name"]
 			person_map[name] = 0
@@ -93,6 +94,8 @@ def saveImage(jsonData, outputFile):
 				person_map[name] += acct["amount"]
 
 	results = jsonData["results"]
+
+	print(results)
 
 	results.sort(key = lambda x: person_map[x["name"]], reverse=True)
 
