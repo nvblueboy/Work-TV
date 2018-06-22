@@ -218,7 +218,11 @@ class AppContainer(RelativeLayout):
 		if (self.captionBox != None):
 			self.captionBox.headline = slide.headline
 			self.captionBox.caption = slide.caption
-			self.captionBox.weather = self.weatherString + " | " +str(time.strftime("%I:%M:%S %p")).lstrip("0")
+			day = time.strftime("%d").lstrip("0")
+			month = time.strftime("%m").lstrip("0")
+			year = time.strftime("%Y")
+			date = month + "/" + day + "/" + year
+			self.captionBox.weather = self.weatherString + " | " +date + ", " + str(time.strftime("%I:%M:%S %p")).lstrip("0")
 
 		if (int(time.time()) != self.oldTime):
 			self.oldTime = int(time.time())
