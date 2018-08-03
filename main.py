@@ -97,7 +97,7 @@ class CaptionBox(RelativeLayout):
 class AppContainer(RelativeLayout):
 	transitionTime = 10
 	weatherUpdate = 600
-	weatherLocation="San+Juan+Capistrano,CA"
+	weatherLocation="San Juan Capistrano, CA"
 
 	weatherUpdated = False
 
