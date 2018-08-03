@@ -27,6 +27,10 @@ class TimeZoneApp(RelativeApp):
 	alaskatz = pytz.timezone('US/Alaska')
 	alaska = StringProperty()
 
+	universaltz = pytz.timezone('Universal')
+	universal = StringProperty()
+
+
 	date = StringProperty()
 
 	location = ""
@@ -53,6 +57,9 @@ class TimeZoneApp(RelativeApp):
 
 		alaska_dt = pacific_dt.astimezone(self.alaskatz)
 		self.alaska = alaska_dt.strftime(self.fmt).lstrip("0")
+
+		universal_dt = pacific_dt.astimezone(self.universaltz)
+		self.universal = universal_dt.strftime(self.fmt).lstrip("0")
 
 		self.date = str(time.strftime("%A, %B ")) + str(time.strftime("%d, ")).lstrip("0") + str(time.strftime("%Y"))
 

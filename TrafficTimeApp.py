@@ -61,8 +61,6 @@ class TrafficTimeApp(BoxApp):
 		if response.status:
 			output = {}
 			rows = response["rows"][0]["elements"]
-			print(json.dumps(rows, indent=4))
-			print(self.destinations)
 			for i in range(len(self.destinations)):
 				dest = self.destinations[i]
 				row = rows[i]
