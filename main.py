@@ -13,7 +13,7 @@ from kivy.logger import Logger
 
 import time
 
-import ImageApp, TimeZoneApp, WeatherApp, TrafficApp, TrafficTimeApp, NewsApp, SalesforceStatusApp, salesforce, WelcomeGuestApp, TimeSlipsApp
+import ImageApp, TimeZoneApp, WeatherApp, TrafficApp, TrafficTimeApp, NewsApp, SalesforceStatusApp, salesforce, WelcomeGuestApp, TimeSlipsApp, CruiseTrackerApp
 
 import weather
 
