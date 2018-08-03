@@ -7,6 +7,7 @@
 #: include SalesforceStatusApp.kv
 #: include WelcomeGuestApp.kv
 #: include TimeSlipsApp.kv
+#: include CruiseTrackerApp.kv
 
 <AppContainer>
 	canvas.before:
@@ -17,6 +18,9 @@
 	Carousel:
 		id:Carousel
 		loop:True
+		CruiseTrackerApp:
+			headline:"Where's Jeff?"
+			caption:"Freedom Of The Seas Tracker"
 
 
 <BottomRibbon>

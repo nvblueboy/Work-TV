@@ -34,7 +34,6 @@ class TimeSlipsApp(RelativeApp):
 		super(TimeSlipsApp, self).update(*args)
 
 	def updateData(self):
-		print("running updateData for timeslipsapp")
 		url = "https://www.softwareanywhere.com/services/apexrest/TimeSlips"
 		response = jsonRequests.getResponse(url)
 		if response.status:
