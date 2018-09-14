@@ -38,7 +38,7 @@ class App():
 
 				
 def getData(debug = False):
-	url = "http://softwareanywhere.com/services/apexrest/WallBoard"
+	url = "http://sa.force.com/public/services/apexrest/WallBoard"
 	works = True
 	r = ""
 	try:
@@ -47,6 +47,8 @@ def getData(debug = False):
 		r = requests.get(url)
 		if debug:
 			print ("Got request.")
+			print(r.status_code)
+			print(r.text)
 	except Exception as e:
 		z = e
 		print(z)
