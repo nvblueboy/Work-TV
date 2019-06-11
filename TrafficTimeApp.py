@@ -46,14 +46,17 @@ class TrafficTimeApp(BoxApp):
 		if times != None:
 			for loc in times.keys():
 				if loc in self.objs:
-					self.objs[loc].time = times[loc]
+					try:
+						self.objs[loc].time = times[loc]
+					except:
+						Logger.error("TrafficTimeApp: Failed to get latest traffic time:" + str(times))
 
 	oldAcceptable = ""
 
 	def getTrafficTime(self, origin, destinations, api_key):
 
 		d_query = "|".join(["+".join(x.split(" ")) for x in destinations])
-		print(d_query)
+		#print(d_query)
 		Logger.info("Traffic Time App: Loading times.")
 		url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+("+".join(origin.split(" ")))+"&destinations="+d_query+"&departure_time=now&key="+self.api_key
 		response = jsonRequests.getResponse(url)
